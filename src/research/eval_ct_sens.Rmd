@@ -1,0 +1,168 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+library(here)
+
+here()
+
+rm(list = ls())
+gc()
+
+N_AGENTS <- 10000
+N_MODELS <- 8
+
+load_ori_data=F
+```
+
+```{r}
+if (load_ori_data==T){
+  df <- rbind(
+    read.csv(here("output_paper_2023/df_agents_ct_exp_sens1.csv")),
+    read.csv(here("output_paper_2023/df_agents_ct_exp_sens2.csv"))
+  )
+  
+  df$Prioritization <- factor(
+    x=df$contact_tracing_population_sort_mode,
+    levels=c("random", "super-spreaders", "young", "old", "household_size", "inc_rank_emp", "inc_rank_sim", "age"),
+    labels=c("Random", "Age+HH", "Young", "Old", "HH", "Inc. emp.", "Inc. sim.", "Age")
+  )
+  
+  # recode some variables
+  df$ever_infected <- ifelse(df$ever_infected=="True", 1, 0)
+  df$ever_icu <- ifelse(df$date_icu !="", 1, 0)
+  
+  df$n_contacts_traced <- df$n_contacts_traced + df$n_times_contact_tracing
+  
+  df$n_infected <- df$ever_infected
+  df$n_icu <- df$ever_icu
+  
+  # counts per replication 
+  df <- aggregate(
+     x=list(
+       "n_infected"=df$n_infected,
+       "n_icu"=df$n_icu,
+       "n_contacts_traced"=df$n_contacts_traced,
+       "n_times_contact_tracing"=df$n_times_contact_tracing,
+       "n_times_contact_traced"=df$n_times_contact_traced
+       ),
+     by=list(
+       "Prioritization"=df$Prioritization, 
+       "contact_tracing_frac"=df$contact_tracing_frac,
+       "replication"=df$master_model_index,
+       "inf_p_shift"=df$inf_p_shift,
+       "contact_tracing_contact_selection_frac" = df$contact_tracing_contact_selection_frac,
+       "n_days_contact_tracing_isolation"=df$n_days_contact_tracing_isolation
+       ),
+     FUN=sum
+   )
+}
+```
+
+```{r}
+if (load_ori_data==T){
+  write.csv(df, "data_output/sens/df_model_ct_sens.csv", row.names = F)
+} else {
+  df <- read.csv("data_output/sens/df_model_ct_sens.csv")
+}
+
+df$Prioritization <- factor(
+    x=df$Prioritization,
+    levels=c("Random", "Age+HH", "HH", "Age",  "Inc. sim.", "Inc. emp.", "Young", "Old"),
+    labels=c("1. Random", "2. HH+Age", "3. HH", "4. Age",  "5. Inc. sim.", "6. Inc. emp.",  "7. Young", "8 .Old")
+  )
+```
+
+```{r}
+n_infected_baseline<- mean(df[df$contact_tracing_frac==0, "n_infected"])
+df$n_infections_prevented <- n_infected_baseline - df$n_infected
+df$share_infections_prevented <- df$n_infections_prevented / n_infected_baseline
+
+n_icu_baseline<- mean(df[df$contact_tracing_frac==0, "n_icu"])
+
+df$n_icu_prevented <- n_icu_baseline - df$n_icu
+df$share_icu_prevented <- df$n_icu_prevented / n_icu_baseline
+
+df$ppt <- df$n_infections_prevented / df$n_contacts_traced
+df$ppt_icu <- df$n_icu_prevented / df$n_contacts_traced
+```
+
+```{r}
+add_space <- function(){theme(plot.margin = unit(c(1,1,1,1), 'lines'))}
+axis_font_size <- function(){theme(axis.text = element_text(size = 8), axis.title = element_text(size = 9))}
+rotate_x_labels <- function(){theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))}
+whitespace_title <- function(){ggtitle(" ")}
+dot_size_1 <- 0.5
+WIDTH = 8
+HEIGHT = 8
+```
+
+```{r}
+ylabs <- list(
+  "share_infections_prevented"="Share of prevented infections",
+  "share_icu_prevented"= "Share of prevented hospitalizations",
+  "ppt"="Prevented infections per traced agent",
+  "ppt_icu"="Prevented hospitalizations per traced agent"
+  )
+
+xlabs <- list(
+  "contact_tracing_contact_selection_frac"="Share of traced contacts of a prioritized agent", 
+  "inf_p_shift"="Change in the probability of infection", 
+  "n_days_contact_tracing_isolation"="Number of days in quarantine"
+  )
+
+mean_error_plot <- function(x_list, y_list){
+  for (x in x_list){
+    g_list <- list()
+    for (y in y_list){
+      
+      g <- (ggpubr::ggerrorplot(
+        data=df,
+        x=x,
+        y=y,
+        color="Prioritization",
+        desc_stat="mean_ci",
+        size=dot_size_1,
+        add="jitter",
+        add.params = list(size = 0.1, alpha = 0.15)
+      ) 
+      + theme_bw()
+      + add_space()
+      + axis_font_size()
+      + theme(aspect.ratio=1)
+      + rotate_x_labels()
+      + ylab(ylabs[y])
+      + xlab(xlabs[x])
+      + whitespace_title()
+      )
+      plot(g)
+      g_list[[length(g_list)+1]] <- g
+    }
+    all_gs <- ggarrange(plotlist=g_list, common.legend = T, legend="bottom", ncol = 2, nrow = 2 )
+    ggsave(paste("img/fig_sens_", x, ".pdf", sep=""), width = WIDTH, height = HEIGHT, dpi = 300)
+    ggsave(paste("img/fig_sens_", x, ".png", sep=""), width = WIDTH, height = HEIGHT, dpi = 300)
+  }
+}
+
+y_list <- c(
+  "share_infections_prevented",
+  "share_icu_prevented",
+  "ppt",
+  "ppt_icu"
+  )
+x_list <- c(
+  "contact_tracing_contact_selection_frac", 
+  "inf_p_shift", 
+  "n_days_contact_tracing_isolation"
+  )
+
+mean_error_plot(x_list=x_list, y_list=y_list)
+```

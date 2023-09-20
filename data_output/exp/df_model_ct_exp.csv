@@ -1,0 +1,385 @@
+"Prioritization","contact_tracing_frac","replication","n_infected","n_icu","n_contacts_traced","n_times_contact_tracing","n_times_contact_traced"
+"Random",0,"1 m0-random-0-individuals-weight-0.8-ill_symptomatic-10-0.0",46631,1797,0,0,0
+"Random",0.1,"1 m1-random-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",32137,1253,15104,1628,13476
+"Age+HH",0.4,"1 m10-super-spreaders-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",4314,184,5131,511,4620
+"Old",0.4,"1 m100-old-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",12188,462,13127,1555,11572
+"Old",0.5,"1 m101-old-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",7670,324,10164,1166,8998
+"Young",0,"1 m102-young-0-individuals-weight-0.8-ill_symptomatic-10-0.0",54181,2120,0,0,0
+"Young",0.1,"1 m103-young-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",40543,1555,8223,954,7269
+"Young",0.2,"1 m104-young-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",25007,1010,16630,1687,14943
+"Young",0.3,"1 m105-young-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",12512,561,14356,1478,12878
+"Young",0.4,"1 m106-young-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",8809,353,11770,1218,10552
+"Young",0.5,"1 m107-young-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",6269,263,8977,926,8051
+"HH",0,"1 m108-household_size-0-individuals-weight-0.8-ill_symptomatic-10-0.0",50408,2052,0,0,0
+"HH",0.1,"1 m109-household_size-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",32658,1346,10809,976,9833
+"Age+HH",0.5,"1 m11-super-spreaders-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3637,145,4031,403,3628
+"HH",0.2,"1 m110-household_size-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",16959,714,10038,936,9102
+"HH",0.3,"1 m111-household_size-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",7994,380,6994,663,6331
+"HH",0.4,"1 m112-household_size-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",5535,257,5991,570,5421
+"HH",0.5,"1 m113-household_size-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3757,142,4209,403,3806
+"Inc. emp.",0,"1 m114-inc_rank_emp-0-individuals-weight-0.8-ill_symptomatic-10-0.0",46195,1721,0,0,0
+"Inc. emp.",0.1,"1 m115-inc_rank_emp-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",27907,1058,10689,1075,9614
+"Inc. emp.",0.2,"1 m116-inc_rank_emp-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",11863,458,11957,1164,10793
+"Inc. emp.",0.3,"1 m117-inc_rank_emp-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",9885,454,11406,1151,10255
+"Inc. emp.",0.4,"1 m118-inc_rank_emp-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",6185,236,7776,768,7008
+"Inc. emp.",0.5,"1 m119-inc_rank_emp-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3584,164,3863,391,3472
+"Old",0,"1 m12-old-0-individuals-weight-0.8-ill_symptomatic-10-0.0",43726,1673,0,0,0
+"Inc. sim.",0,"1 m120-inc_rank_sim-0-individuals-weight-0.8-ill_symptomatic-10-0.0",47436,2004,0,0,0
+"Inc. sim.",0.1,"1 m121-inc_rank_sim-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",32192,1286,9590,1157,8433
+"Inc. sim.",0.2,"1 m122-inc_rank_sim-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",10468,415,8761,843,7918
+"Inc. sim.",0.3,"1 m123-inc_rank_sim-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",4750,197,5348,546,4802
+"Inc. sim.",0.4,"1 m124-inc_rank_sim-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",5695,243,7534,793,6741
+"Inc. sim.",0.5,"1 m125-inc_rank_sim-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3686,148,4075,416,3659
+"Random",0,"1 m126-random-0-individuals-weight-0.8-ill_symptomatic-10-0.0",54950,2104,0,0,0
+"Random",0.1,"1 m127-random-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",24269,995,11936,1297,10639
+"Random",0.2,"1 m128-random-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",15543,622,13700,1495,12205
+"Random",0.3,"1 m129-random-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",11829,425,14068,1512,12556
+"Old",0.1,"1 m13-old-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",42317,1585,5582,896,4686
+"Random",0.4,"1 m130-random-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",8106,338,11294,1229,10065
+"Random",0.5,"1 m131-random-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",6433,281,9407,1029,8378
+"Age+HH",0,"1 m132-super-spreaders-0-individuals-weight-0.8-ill_symptomatic-10-0.0",44286,1736,0,0,0
+"Age+HH",0.1,"1 m133-super-spreaders-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",23364,986,11303,1065,10238
+"Age+HH",0.2,"1 m134-super-spreaders-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",10397,465,9603,897,8706
+"Age+HH",0.3,"1 m135-super-spreaders-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5319,247,5869,566,5303
+"Age+HH",0.4,"1 m136-super-spreaders-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",4199,194,5160,509,4651
+"Age+HH",0.5,"1 m137-super-spreaders-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3391,138,4257,425,3832
+"Old",0,"1 m138-old-0-individuals-weight-0.8-ill_symptomatic-10-0.0",45874,1735,0,0,0
+"Old",0.1,"1 m139-old-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",49901,1892,6089,1001,5088
+"Old",0.2,"1 m14-old-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",36412,1282,10217,1568,8649
+"Old",0.2,"1 m140-old-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",46888,1737,12817,2011,10806
+"Old",0.3,"1 m141-old-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",24771,893,14888,2053,12835
+"Old",0.4,"1 m142-old-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",14648,538,15670,1887,13783
+"Old",0.5,"1 m143-old-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",6600,242,8482,991,7491
+"Young",0,"1 m144-young-0-individuals-weight-0.8-ill_symptomatic-10-0.0",43594,1759,0,0,0
+"Young",0.1,"1 m145-young-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",46040,1796,10389,1195,9194
+"Young",0.2,"1 m146-young-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",29134,1250,19034,1925,17109
+"Young",0.3,"1 m147-young-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",12672,515,14568,1483,13085
+"Young",0.4,"1 m148-young-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",8039,363,10208,1067,9141
+"Young",0.5,"1 m149-young-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",6412,297,9363,949,8414
+"Old",0.3,"1 m15-old-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",26407,934,17376,2336,15040
+"HH",0,"1 m150-household_size-0-individuals-weight-0.8-ill_symptomatic-10-0.0",50916,2076,0,0,0
+"HH",0.1,"1 m151-household_size-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",27897,1140,9434,816,8618
+"HH",0.2,"1 m152-household_size-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",15165,666,9400,865,8535
+"HH",0.3,"1 m153-household_size-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",7320,319,7043,664,6379
+"HH",0.4,"1 m154-household_size-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",6475,256,6752,656,6096
+"HH",0.5,"1 m155-household_size-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",4003,198,4248,446,3802
+"Inc. emp.",0,"1 m156-inc_rank_emp-0-individuals-weight-0.8-ill_symptomatic-10-0.0",49931,1972,0,0,0
+"Inc. emp.",0.1,"1 m157-inc_rank_emp-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",28010,1088,10926,1093,9833
+"Inc. emp.",0.2,"1 m158-inc_rank_emp-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",11397,410,11179,1070,10109
+"Inc. emp.",0.3,"1 m159-inc_rank_emp-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",9919,387,11903,1189,10714
+"Old",0.4,"1 m16-old-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",11711,402,11634,1455,10179
+"Inc. emp.",0.4,"1 m160-inc_rank_emp-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",5678,226,6456,653,5803
+"Inc. emp.",0.5,"1 m161-inc_rank_emp-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3661,147,4086,410,3676
+"Inc. sim.",0,"1 m162-inc_rank_sim-0-individuals-weight-0.8-ill_symptomatic-10-0.0",43717,1738,0,0,0
+"Inc. sim.",0.1,"1 m163-inc_rank_sim-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",34809,1476,9586,1192,8394
+"Inc. sim.",0.2,"1 m164-inc_rank_sim-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",11074,408,8650,826,7824
+"Inc. sim.",0.3,"1 m165-inc_rank_sim-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5469,237,6747,679,6068
+"Inc. sim.",0.4,"1 m166-inc_rank_sim-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",5354,214,7020,746,6274
+"Inc. sim.",0.5,"1 m167-inc_rank_sim-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3834,172,3869,428,3441
+"Old",0.5,"1 m17-old-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",8046,326,10216,1212,9004
+"Young",0,"1 m18-young-0-individuals-weight-0.8-ill_symptomatic-10-0.0",45256,1743,0,0,0
+"Young",0.1,"1 m19-young-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",39484,1508,9420,1064,8356
+"Random",0.2,"1 m2-random-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",16611,696,14017,1535,12482
+"Young",0.2,"1 m20-young-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",25303,981,16995,1710,15285
+"Young",0.3,"1 m21-young-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",13875,542,15386,1574,13812
+"Young",0.4,"1 m22-young-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",7751,304,9773,988,8785
+"Young",0.5,"1 m23-young-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",6110,256,8588,857,7731
+"HH",0,"1 m24-household_size-0-individuals-weight-0.8-ill_symptomatic-10-0.0",53582,2259,0,0,0
+"HH",0.1,"1 m25-household_size-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",24340,980,7457,665,6792
+"HH",0.2,"1 m26-household_size-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",19935,817,11660,1094,10566
+"HH",0.3,"1 m27-household_size-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",8074,369,7978,750,7228
+"HH",0.4,"1 m28-household_size-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",5409,228,5088,498,4590
+"HH",0.5,"1 m29-household_size-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",4132,187,4671,459,4212
+"Random",0.3,"1 m3-random-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",10330,421,11837,1338,10499
+"Inc. emp.",0,"1 m30-inc_rank_emp-0-individuals-weight-0.8-ill_symptomatic-10-0.0",47808,1843,0,0,0
+"Inc. emp.",0.1,"1 m31-inc_rank_emp-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",30715,1174,12110,1192,10918
+"Inc. emp.",0.2,"1 m32-inc_rank_emp-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",11743,489,11930,1124,10806
+"Inc. emp.",0.3,"1 m33-inc_rank_emp-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",11257,473,13373,1344,12029
+"Inc. emp.",0.4,"1 m34-inc_rank_emp-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",6061,289,7808,772,7036
+"Inc. emp.",0.5,"1 m35-inc_rank_emp-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3390,155,3435,343,3092
+"Inc. sim.",0,"1 m36-inc_rank_sim-0-individuals-weight-0.8-ill_symptomatic-10-0.0",43706,1679,0,0,0
+"Inc. sim.",0.1,"1 m37-inc_rank_sim-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",40127,1558,11785,1456,10329
+"Inc. sim.",0.2,"1 m38-inc_rank_sim-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",8964,324,7397,693,6704
+"Inc. sim.",0.3,"1 m39-inc_rank_sim-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",6078,239,7365,744,6621
+"Random",0.4,"1 m4-random-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",8317,322,11394,1256,10138
+"Inc. sim.",0.4,"1 m40-inc_rank_sim-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",5229,218,7075,741,6334
+"Inc. sim.",0.5,"1 m41-inc_rank_sim-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3615,160,3964,432,3532
+"Random",0,"1 m42-random-0-individuals-weight-0.8-ill_symptomatic-10-0.0",50623,1987,0,0,0
+"Random",0.1,"1 m43-random-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",27171,1067,12793,1361,11432
+"Random",0.2,"1 m44-random-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",19281,751,17066,1890,15176
+"Random",0.3,"1 m45-random-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",12821,517,14476,1600,12876
+"Random",0.4,"1 m46-random-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",7794,314,10712,1148,9564
+"Random",0.5,"1 m47-random-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",6025,261,8471,950,7521
+"Age+HH",0,"1 m48-super-spreaders-0-individuals-weight-0.8-ill_symptomatic-10-0.0",48474,1833,0,0,0
+"Age+HH",0.1,"1 m49-super-spreaders-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",25808,1077,13744,1271,12473
+"Random",0.5,"1 m5-random-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",5367,206,7290,816,6474
+"Age+HH",0.2,"1 m50-super-spreaders-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",9490,396,9213,864,8349
+"Age+HH",0.3,"1 m51-super-spreaders-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",4981,213,5851,571,5280
+"Age+HH",0.4,"1 m52-super-spreaders-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",4441,211,5396,535,4861
+"Age+HH",0.5,"1 m53-super-spreaders-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3297,139,3411,351,3060
+"Old",0,"1 m54-old-0-individuals-weight-0.8-ill_symptomatic-10-0.0",53587,2045,0,0,0
+"Old",0.1,"1 m55-old-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",42790,1609,6203,1012,5191
+"Old",0.2,"1 m56-old-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",38351,1420,10629,1655,8974
+"Old",0.3,"1 m57-old-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",24927,840,15710,2162,13548
+"Old",0.4,"1 m58-old-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",15837,598,17358,2096,15262
+"Old",0.5,"1 m59-old-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",6816,219,8951,1041,7910
+"Age+HH",0,"1 m6-super-spreaders-0-individuals-weight-0.8-ill_symptomatic-10-0.0",47878,1856,0,0,0
+"Young",0,"1 m60-young-0-individuals-weight-0.8-ill_symptomatic-10-0.0",46182,1822,0,0,0
+"Young",0.1,"1 m61-young-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",37863,1548,9094,1020,8074
+"Young",0.2,"1 m62-young-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",30122,1153,18532,1869,16663
+"Young",0.3,"1 m63-young-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",10414,430,11176,1140,10036
+"Young",0.4,"1 m64-young-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",7375,312,9822,993,8829
+"Young",0.5,"1 m65-young-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",6018,247,8826,888,7938
+"HH",0,"1 m66-household_size-0-individuals-weight-0.8-ill_symptomatic-10-0.0",48117,1913,0,0,0
+"HH",0.1,"1 m67-household_size-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",24888,935,8669,781,7888
+"HH",0.2,"1 m68-household_size-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",17421,774,10581,957,9624
+"HH",0.3,"1 m69-household_size-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",8587,392,7695,734,6961
+"Age+HH",0.1,"1 m7-super-spreaders-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",22127,923,12024,1129,10895
+"HH",0.4,"1 m70-household_size-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",6746,292,7029,697,6332
+"HH",0.5,"1 m71-household_size-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3930,162,4223,429,3794
+"Inc. emp.",0,"1 m72-inc_rank_emp-0-individuals-weight-0.8-ill_symptomatic-10-0.0",45483,1749,0,0,0
+"Inc. emp.",0.1,"1 m73-inc_rank_emp-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",26961,1085,11170,1074,10096
+"Inc. emp.",0.2,"1 m74-inc_rank_emp-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",12836,471,13525,1302,12223
+"Inc. emp.",0.3,"1 m75-inc_rank_emp-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",11738,453,13789,1412,12377
+"Inc. emp.",0.4,"1 m76-inc_rank_emp-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",5964,233,7290,709,6581
+"Inc. emp.",0.5,"1 m77-inc_rank_emp-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3583,142,3997,413,3584
+"Inc. sim.",0,"1 m78-inc_rank_sim-0-individuals-weight-0.8-ill_symptomatic-10-0.0",51453,2180,0,0,0
+"Inc. sim.",0.1,"1 m79-inc_rank_sim-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",35261,1454,10548,1239,9309
+"Age+HH",0.2,"1 m8-super-spreaders-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",10210,438,9831,927,8904
+"Inc. sim.",0.2,"1 m80-inc_rank_sim-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",10958,456,8293,801,7492
+"Inc. sim.",0.3,"1 m81-inc_rank_sim-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",6140,268,8286,831,7455
+"Inc. sim.",0.4,"1 m82-inc_rank_sim-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",4558,192,5934,603,5331
+"Inc. sim.",0.5,"1 m83-inc_rank_sim-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3594,154,3922,422,3500
+"Random",0,"1 m84-random-0-individuals-weight-0.8-ill_symptomatic-10-0.0",54408,1973,0,0,0
+"Random",0.1,"1 m85-random-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",30466,1160,14547,1577,12970
+"Random",0.2,"1 m86-random-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",15954,678,14756,1588,13168
+"Random",0.3,"1 m87-random-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",11858,434,14292,1537,12755
+"Random",0.4,"1 m88-random-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",7755,290,10234,1117,9117
+"Random",0.5,"1 m89-random-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",6170,281,9180,1010,8170
+"Age+HH",0.3,"1 m9-super-spreaders-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5953,282,6882,662,6220
+"Age+HH",0,"1 m90-super-spreaders-0-individuals-weight-0.8-ill_symptomatic-10-0.0",48044,1863,0,0,0
+"Age+HH",0.1,"1 m91-super-spreaders-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",21458,844,10263,958,9305
+"Age+HH",0.2,"1 m92-super-spreaders-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",9212,415,8564,803,7761
+"Age+HH",0.3,"1 m93-super-spreaders-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5153,216,5625,563,5062
+"Age+HH",0.4,"1 m94-super-spreaders-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",4646,217,5440,540,4900
+"Age+HH",0.5,"1 m95-super-spreaders-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3388,147,3492,363,3129
+"Old",0,"1 m96-old-0-individuals-weight-0.8-ill_symptomatic-10-0.0",48730,1925,0,0,0
+"Old",0.1,"1 m97-old-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",40478,1531,4909,825,4084
+"Old",0.2,"1 m98-old-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",44941,1688,12661,1967,10694
+"Old",0.3,"1 m99-old-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",21061,746,13334,1781,11553
+"Random",0,"2 m0-random-0-individuals-weight-0.8-ill_symptomatic-10-0.0",50017,1876,0,0,0
+"Random",0.1,"2 m1-random-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",29963,1169,14577,1606,12971
+"Age+HH",0.4,"2 m10-super-spreaders-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",3784,153,3945,409,3536
+"Old",0.4,"2 m100-old-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",12193,419,12487,1524,10963
+"Old",0.5,"2 m101-old-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",7087,292,9100,1054,8046
+"Young",0,"2 m102-young-0-individuals-weight-0.8-ill_symptomatic-10-0.0",45913,1792,0,0,0
+"Young",0.1,"2 m103-young-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",45372,1805,9796,1107,8689
+"Young",0.2,"2 m104-young-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",25168,983,16119,1611,14508
+"Young",0.3,"2 m105-young-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",12012,515,12677,1319,11358
+"Young",0.4,"2 m106-young-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",7597,285,10137,1056,9081
+"Young",0.5,"2 m107-young-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",5328,220,7187,735,6452
+"HH",0,"2 m108-household_size-0-individuals-weight-0.8-ill_symptomatic-10-0.0",42971,1680,0,0,0
+"HH",0.1,"2 m109-household_size-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",24801,1033,7596,675,6921
+"Age+HH",0.5,"2 m11-super-spreaders-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3465,145,4053,423,3630
+"HH",0.2,"2 m110-household_size-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",17371,748,10177,965,9212
+"HH",0.3,"2 m111-household_size-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",7123,311,6323,583,5740
+"HH",0.4,"2 m112-household_size-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",7079,323,7825,770,7055
+"HH",0.5,"2 m113-household_size-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3661,139,3824,371,3453
+"Inc. emp.",0,"2 m114-inc_rank_emp-0-individuals-weight-0.8-ill_symptomatic-10-0.0",45985,1879,0,0,0
+"Inc. emp.",0.1,"2 m115-inc_rank_emp-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",29260,1165,11638,1159,10479
+"Inc. emp.",0.2,"2 m116-inc_rank_emp-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",11383,427,11833,1129,10704
+"Inc. emp.",0.3,"2 m117-inc_rank_emp-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",11749,459,13527,1382,12145
+"Inc. emp.",0.4,"2 m118-inc_rank_emp-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",5959,257,7404,745,6659
+"Inc. emp.",0.5,"2 m119-inc_rank_emp-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3980,194,4159,427,3732
+"Old",0,"2 m12-old-0-individuals-weight-0.8-ill_symptomatic-10-0.0",45734,1750,0,0,0
+"Inc. sim.",0,"2 m120-inc_rank_sim-0-individuals-weight-0.8-ill_symptomatic-10-0.0",54568,2173,0,0,0
+"Inc. sim.",0.1,"2 m121-inc_rank_sim-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",31766,1324,9605,1135,8470
+"Inc. sim.",0.2,"2 m122-inc_rank_sim-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",12160,451,9723,905,8818
+"Inc. sim.",0.3,"2 m123-inc_rank_sim-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5693,241,6966,709,6257
+"Inc. sim.",0.4,"2 m124-inc_rank_sim-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",4940,233,6236,650,5586
+"Inc. sim.",0.5,"2 m125-inc_rank_sim-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3690,164,4041,419,3622
+"Random",0,"2 m126-random-0-individuals-weight-0.8-ill_symptomatic-10-0.0",42788,1699,0,0,0
+"Random",0.1,"2 m127-random-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",23847,943,11571,1277,10294
+"Random",0.2,"2 m128-random-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",16108,607,14688,1597,13091
+"Random",0.3,"2 m129-random-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",12795,503,15561,1673,13888
+"Old",0.1,"2 m13-old-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",42967,1583,5412,895,4517
+"Random",0.4,"2 m130-random-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",8501,320,11406,1243,10163
+"Random",0.5,"2 m131-random-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",5978,250,8454,927,7527
+"Age+HH",0,"2 m132-super-spreaders-0-individuals-weight-0.8-ill_symptomatic-10-0.0",56404,2167,0,0,0
+"Age+HH",0.1,"2 m133-super-spreaders-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",20411,849,10541,991,9550
+"Age+HH",0.2,"2 m134-super-spreaders-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",9318,405,9461,891,8570
+"Age+HH",0.3,"2 m135-super-spreaders-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5862,242,6430,616,5814
+"Age+HH",0.4,"2 m136-super-spreaders-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",4601,196,5833,582,5251
+"Age+HH",0.5,"2 m137-super-spreaders-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3254,161,3615,369,3246
+"Old",0,"2 m138-old-0-individuals-weight-0.8-ill_symptomatic-10-0.0",53697,1985,0,0,0
+"Old",0.1,"2 m139-old-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",46368,1849,6776,1126,5650
+"Old",0.2,"2 m14-old-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",44770,1606,13066,2052,11014
+"Old",0.2,"2 m140-old-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",35287,1308,8996,1444,7552
+"Old",0.3,"2 m141-old-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",22783,805,15063,2016,13047
+"Old",0.4,"2 m142-old-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",11172,455,11473,1397,10076
+"Old",0.5,"2 m143-old-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",6640,254,8864,1000,7864
+"Young",0,"2 m144-young-0-individuals-weight-0.8-ill_symptomatic-10-0.0",48967,1897,0,0,0
+"Young",0.1,"2 m145-young-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",43721,1707,8845,1026,7819
+"Young",0.2,"2 m146-young-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",25995,1022,18184,1789,16395
+"Young",0.3,"2 m147-young-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",13528,568,15155,1537,13618
+"Young",0.4,"2 m148-young-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",8690,367,11972,1224,10748
+"Young",0.5,"2 m149-young-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",5775,233,8067,832,7235
+"Old",0.3,"2 m15-old-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",26915,1012,16324,2215,14109
+"HH",0,"2 m150-household_size-0-individuals-weight-0.8-ill_symptomatic-10-0.0",55336,2203,0,0,0
+"HH",0.1,"2 m151-household_size-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",25041,962,8280,719,7561
+"HH",0.2,"2 m152-household_size-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",15311,676,9177,852,8325
+"HH",0.3,"2 m153-household_size-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",8988,383,8477,818,7659
+"HH",0.4,"2 m154-household_size-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",6861,316,7384,713,6671
+"HH",0.5,"2 m155-household_size-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",4378,197,5184,505,4679
+"Inc. emp.",0,"2 m156-inc_rank_emp-0-individuals-weight-0.8-ill_symptomatic-10-0.0",46662,1855,0,0,0
+"Inc. emp.",0.1,"2 m157-inc_rank_emp-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",29036,1138,10891,1081,9810
+"Inc. emp.",0.2,"2 m158-inc_rank_emp-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",10899,461,11316,1082,10234
+"Inc. emp.",0.3,"2 m159-inc_rank_emp-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",9962,444,11968,1212,10756
+"Old",0.4,"2 m16-old-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",12219,437,12831,1573,11258
+"Inc. emp.",0.4,"2 m160-inc_rank_emp-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",6644,252,8508,855,7653
+"Inc. emp.",0.5,"2 m161-inc_rank_emp-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3487,178,3432,350,3082
+"Inc. sim.",0,"2 m162-inc_rank_sim-0-individuals-weight-0.8-ill_symptomatic-10-0.0",50657,1994,0,0,0
+"Inc. sim.",0.1,"2 m163-inc_rank_sim-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",38294,1482,11303,1388,9915
+"Inc. sim.",0.2,"2 m164-inc_rank_sim-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",12663,504,10234,966,9268
+"Inc. sim.",0.3,"2 m165-inc_rank_sim-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5147,231,5790,599,5191
+"Inc. sim.",0.4,"2 m166-inc_rank_sim-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",5170,256,6586,699,5887
+"Inc. sim.",0.5,"2 m167-inc_rank_sim-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3885,187,4354,440,3914
+"Old",0.5,"2 m17-old-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",6251,254,7259,870,6389
+"Young",0,"2 m18-young-0-individuals-weight-0.8-ill_symptomatic-10-0.0",46003,1787,0,0,0
+"Young",0.1,"2 m19-young-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",40084,1619,9454,1086,8368
+"Random",0.2,"2 m2-random-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",19783,755,17968,1918,16050
+"Young",0.2,"2 m20-young-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",26384,1104,17795,1784,16011
+"Young",0.3,"2 m21-young-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",11087,455,11526,1187,10339
+"Young",0.4,"2 m22-young-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",7637,320,10097,1027,9070
+"Young",0.5,"2 m23-young-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",6535,298,9742,999,8743
+"HH",0,"2 m24-household_size-0-individuals-weight-0.8-ill_symptomatic-10-0.0",50604,1994,0,0,0
+"HH",0.1,"2 m25-household_size-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",27591,1069,9115,799,8316
+"HH",0.2,"2 m26-household_size-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",15021,704,9481,860,8621
+"HH",0.3,"2 m27-household_size-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",8785,382,8691,805,7886
+"HH",0.4,"2 m28-household_size-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",6030,271,5991,592,5399
+"HH",0.5,"2 m29-household_size-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3677,166,3992,390,3602
+"Random",0.3,"2 m3-random-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",12528,511,14659,1608,13051
+"Inc. emp.",0,"2 m30-inc_rank_emp-0-individuals-weight-0.8-ill_symptomatic-10-0.0",51449,2004,0,0,0
+"Inc. emp.",0.1,"2 m31-inc_rank_emp-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",34218,1310,12826,1292,11534
+"Inc. emp.",0.2,"2 m32-inc_rank_emp-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",11382,406,11533,1111,10422
+"Inc. emp.",0.3,"2 m33-inc_rank_emp-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",9928,398,11816,1165,10651
+"Inc. emp.",0.4,"2 m34-inc_rank_emp-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",5543,244,6478,640,5838
+"Inc. emp.",0.5,"2 m35-inc_rank_emp-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3621,178,3509,349,3160
+"Inc. sim.",0,"2 m36-inc_rank_sim-0-individuals-weight-0.8-ill_symptomatic-10-0.0",44692,1809,0,0,0
+"Inc. sim.",0.1,"2 m37-inc_rank_sim-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",34664,1411,9802,1181,8621
+"Inc. sim.",0.2,"2 m38-inc_rank_sim-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",11514,483,9546,914,8632
+"Inc. sim.",0.3,"2 m39-inc_rank_sim-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5607,226,7147,735,6412
+"Random",0.4,"2 m4-random-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",7936,297,10768,1195,9573
+"Inc. sim.",0.4,"2 m40-inc_rank_sim-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",5136,225,6478,674,5804
+"Inc. sim.",0.5,"2 m41-inc_rank_sim-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",4069,184,4654,494,4160
+"Random",0,"2 m42-random-0-individuals-weight-0.8-ill_symptomatic-10-0.0",47495,1802,0,0,0
+"Random",0.1,"2 m43-random-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",23492,932,10905,1202,9703
+"Random",0.2,"2 m44-random-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",14895,603,12620,1411,11209
+"Random",0.3,"2 m45-random-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",12831,517,15333,1680,13653
+"Random",0.4,"2 m46-random-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",8410,353,11794,1260,10534
+"Random",0.5,"2 m47-random-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",5278,209,7179,791,6388
+"Age+HH",0,"2 m48-super-spreaders-0-individuals-weight-0.8-ill_symptomatic-10-0.0",49857,1984,0,0,0
+"Age+HH",0.1,"2 m49-super-spreaders-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",23180,992,11645,1096,10549
+"Random",0.5,"2 m5-random-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",5244,210,7316,803,6513
+"Age+HH",0.2,"2 m50-super-spreaders-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",11589,510,11536,1100,10436
+"Age+HH",0.3,"2 m51-super-spreaders-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5237,266,5926,579,5347
+"Age+HH",0.4,"2 m52-super-spreaders-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",4507,185,5342,530,4812
+"Age+HH",0.5,"2 m53-super-spreaders-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3281,155,3526,365,3161
+"Old",0,"2 m54-old-0-individuals-weight-0.8-ill_symptomatic-10-0.0",52574,2106,0,0,0
+"Old",0.1,"2 m55-old-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",48805,1891,6472,1075,5397
+"Old",0.2,"2 m56-old-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",43356,1617,11839,1877,9962
+"Old",0.3,"2 m57-old-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",21933,806,14210,1915,12295
+"Old",0.4,"2 m58-old-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",13166,459,14314,1703,12611
+"Old",0.5,"2 m59-old-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",6940,269,9468,1098,8370
+"Age+HH",0,"2 m6-super-spreaders-0-individuals-weight-0.8-ill_symptomatic-10-0.0",48203,1786,0,0,0
+"Young",0,"2 m60-young-0-individuals-weight-0.8-ill_symptomatic-10-0.0",49032,1962,0,0,0
+"Young",0.1,"2 m61-young-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",37968,1451,8401,958,7443
+"Young",0.2,"2 m62-young-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",25633,1034,17207,1705,15502
+"Young",0.3,"2 m63-young-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",11481,417,12530,1278,11252
+"Young",0.4,"2 m64-young-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",9461,394,12385,1267,11118
+"Young",0.5,"2 m65-young-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",5952,271,8518,860,7658
+"HH",0,"2 m66-household_size-0-individuals-weight-0.8-ill_symptomatic-10-0.0",48172,1925,0,0,0
+"HH",0.1,"2 m67-household_size-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",29750,1228,9175,792,8383
+"HH",0.2,"2 m68-household_size-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",17351,679,9534,913,8621
+"HH",0.3,"2 m69-household_size-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",7746,337,7487,701,6786
+"Age+HH",0.1,"2 m7-super-spreaders-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",22968,967,11129,1023,10106
+"HH",0.4,"2 m70-household_size-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",5363,265,5710,553,5157
+"HH",0.5,"2 m71-household_size-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3819,168,4239,423,3816
+"Inc. emp.",0,"2 m72-inc_rank_emp-0-individuals-weight-0.8-ill_symptomatic-10-0.0",47332,1868,0,0,0
+"Inc. emp.",0.1,"2 m73-inc_rank_emp-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",32874,1289,12410,1258,11152
+"Inc. emp.",0.2,"2 m74-inc_rank_emp-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",12520,501,12888,1222,11666
+"Inc. emp.",0.3,"2 m75-inc_rank_emp-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",11330,439,13657,1352,12305
+"Inc. emp.",0.4,"2 m76-inc_rank_emp-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",5663,241,6541,661,5880
+"Inc. emp.",0.5,"2 m77-inc_rank_emp-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3490,157,3625,376,3249
+"Inc. sim.",0,"2 m78-inc_rank_sim-0-individuals-weight-0.8-ill_symptomatic-10-0.0",52249,2010,0,0,0
+"Inc. sim.",0.1,"2 m79-inc_rank_sim-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",35412,1508,10110,1199,8911
+"Age+HH",0.2,"2 m8-super-spreaders-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",7985,352,6974,671,6303
+"Inc. sim.",0.2,"2 m80-inc_rank_sim-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",11089,433,9143,872,8271
+"Inc. sim.",0.3,"2 m81-inc_rank_sim-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5830,273,7235,733,6502
+"Inc. sim.",0.4,"2 m82-inc_rank_sim-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",4896,209,6292,651,5641
+"Inc. sim.",0.5,"2 m83-inc_rank_sim-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3791,162,4431,460,3971
+"Random",0,"2 m84-random-0-individuals-weight-0.8-ill_symptomatic-10-0.0",44593,1686,0,0,0
+"Random",0.1,"2 m85-random-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",26444,1017,12658,1381,11277
+"Random",0.2,"2 m86-random-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",16984,674,15081,1616,13465
+"Random",0.3,"2 m87-random-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",11594,431,13585,1488,12097
+"Random",0.4,"2 m88-random-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",7381,254,9190,1005,8185
+"Random",0.5,"2 m89-random-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",6648,294,9377,1024,8353
+"Age+HH",0.3,"2 m9-super-spreaders-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5605,226,6395,617,5778
+"Age+HH",0,"2 m90-super-spreaders-0-individuals-weight-0.8-ill_symptomatic-10-0.0",43409,1713,0,0,0
+"Age+HH",0.1,"2 m91-super-spreaders-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",21587,866,11022,1043,9979
+"Age+HH",0.2,"2 m92-super-spreaders-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",8286,339,7768,729,7039
+"Age+HH",0.3,"2 m93-super-spreaders-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5818,263,6793,652,6141
+"Age+HH",0.4,"2 m94-super-spreaders-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",3816,168,4187,408,3779
+"Age+HH",0.5,"2 m95-super-spreaders-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3185,124,3623,372,3251
+"Old",0,"2 m96-old-0-individuals-weight-0.8-ill_symptomatic-10-0.0",49598,1871,0,0,0
+"Old",0.1,"2 m97-old-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",45972,1819,6256,1018,5238
+"Old",0.2,"2 m98-old-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",38739,1477,10625,1688,8937
+"Old",0.3,"2 m99-old-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",31330,1188,20281,2808,17473
+"Age",0,"3 m0-age-0-individuals-weight-0.8-ill_symptomatic-10-0.0",51868,1976,0,0,0
+"Age",0.1,"3 m1-age-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",33950,1309,9951,1136,8815
+"Age",0.4,"3 m10-age-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",4456,214,5279,542,4737
+"Age",0.5,"3 m11-age-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3662,148,4319,446,3873
+"Age",0,"3 m12-age-0-individuals-weight-0.8-ill_symptomatic-10-0.0",44275,1699,0,0,0
+"Age",0.1,"3 m13-age-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",37112,1446,10943,1269,9674
+"Age",0.2,"3 m14-age-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",9676,371,8931,839,8092
+"Age",0.3,"3 m15-age-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5413,210,6254,646,5608
+"Age",0.4,"3 m16-age-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",5010,225,6648,695,5953
+"Age",0.5,"3 m17-age-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3468,129,3611,383,3228
+"Age",0,"3 m18-age-0-individuals-weight-0.8-ill_symptomatic-10-0.0",48486,2036,0,0,0
+"Age",0.1,"3 m19-age-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",29617,1210,8822,1021,7801
+"Age",0.2,"3 m2-age-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",10733,449,9378,880,8498
+"Age",0.2,"3 m20-age-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",10869,477,9286,849,8437
+"Age",0.3,"3 m21-age-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5671,236,6960,710,6250
+"Age",0.4,"3 m22-age-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",5299,238,6837,703,6134
+"Age",0.5,"3 m23-age-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3613,156,3957,413,3544
+"Age",0,"3 m24-age-0-individuals-weight-0.8-ill_symptomatic-10-0.0",43326,1625,0,0,0
+"Age",0.1,"3 m25-age-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",32202,1290,8926,1074,7852
+"Age",0.2,"3 m26-age-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",12775,500,9740,941,8799
+"Age",0.3,"3 m27-age-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5618,225,6990,706,6284
+"Age",0.4,"3 m28-age-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",4619,196,5567,572,4995
+"Age",0.5,"3 m29-age-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3416,155,3389,355,3034
+"Age",0.3,"3 m3-age-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5859,267,7384,754,6630
+"Age",0,"3 m30-age-0-individuals-weight-0.8-ill_symptomatic-10-0.0",43004,1662,0,0,0
+"Age",0.1,"3 m31-age-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",32993,1364,9555,1139,8416
+"Age",0.2,"3 m32-age-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",11038,416,9136,874,8262
+"Age",0.3,"3 m33-age-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5160,240,5708,572,5136
+"Age",0.4,"3 m34-age-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",4554,203,5655,572,5083
+"Age",0.5,"3 m35-age-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3751,139,3853,404,3449
+"Age",0,"3 m36-age-0-individuals-weight-0.8-ill_symptomatic-10-0.0",56486,2123,0,0,0
+"Age",0.1,"3 m37-age-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",35565,1415,9720,1178,8542
+"Age",0.2,"3 m38-age-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",12917,482,9882,947,8935
+"Age",0.3,"3 m39-age-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5796,252,7114,742,6372
+"Age",0.4,"3 m4-age-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",5581,274,7658,784,6874
+"Age",0.4,"3 m40-age-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",5348,215,7080,753,6327
+"Age",0.5,"3 m41-age-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3910,174,4475,457,4018
+"Age",0,"3 m42-age-0-individuals-weight-0.8-ill_symptomatic-10-0.0",51642,1988,0,0,0
+"Age",0.1,"3 m43-age-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",35497,1315,9539,1195,8344
+"Age",0.2,"3 m44-age-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",10418,407,8574,813,7761
+"Age",0.3,"3 m45-age-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5060,192,6258,625,5633
+"Age",0.4,"3 m46-age-0.4-individuals-weight-0.8-ill_symptomatic-10-0.0",5154,211,7061,734,6327
+"Age",0.5,"3 m47-age-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3659,158,4123,427,3696
+"Age",0.5,"3 m5-age-0.5-individuals-weight-0.8-ill_symptomatic-10-0.0",3588,176,3770,394,3376
+"Age",0,"3 m6-age-0-individuals-weight-0.8-ill_symptomatic-10-0.0",47300,1912,0,0,0
+"Age",0.1,"3 m7-age-0.1-individuals-weight-0.8-ill_symptomatic-10-0.0",37395,1529,9798,1207,8591
+"Age",0.2,"3 m8-age-0.2-individuals-weight-0.8-ill_symptomatic-10-0.0",11325,466,10165,967,9198
+"Age",0.3,"3 m9-age-0.3-individuals-weight-0.8-ill_symptomatic-10-0.0",5844,295,7050,734,6316
