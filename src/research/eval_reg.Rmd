@@ -280,6 +280,12 @@ stargazer::stargazer(
 ```
 
 ```{r}
+m3
+```
+
+
+
+```{r}
 g_pred_values <- interactions::interact_plot(
   m3, 
   pred=household_size, 
