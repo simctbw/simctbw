@@ -8,7 +8,7 @@
 ### Preparation
 1. Clone this repository.
 2. Install the conda environment from `env.yaml`
-3. Copy the GSOEP-folder "`SOEP-CORE.v**eu_STATA"` into `/data_input/soep/`.
+3. Copy the GSOEP-folder `SOEP-CORE.v**eu_STATA` into `/data_input/soep/`.
 4. Run all cells in `src/research/eval_model.ipynb`.
 
 ### Simulation
