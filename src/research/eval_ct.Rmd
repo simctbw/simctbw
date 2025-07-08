@@ -24,7 +24,7 @@ here()
 ```
 
 ```{r}
-LOAD_AGGR_DATA = FALSE
+LOAD_AGGR_DATA = TRUE
 PATH <- here::here("data_output/exp")
 ```
 
@@ -123,14 +123,18 @@ if (!LOAD_AGGR_DATA){
 ```
 
 ```{r}
-df_ori <- df
-saveRDS(df_ori, file=paste(PATH, "df_aggr.rdata", sep="/"))
+if (!LOAD_AGGR_DATA){
+  df_ori <- df
+  saveRDS(df_ori, file=paste(PATH, "df_aggr.rdata", sep="/"))
+}
 ```
 
 ```{r}
 if (LOAD_AGGR_DATA){
   df <- readRDS(here::here("data_output/exp/df_aggr.rdata"))
+  df_ori <- df
 }
+
 ```
 
 ## Calculate main effect measures
