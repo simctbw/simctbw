@@ -14,10 +14,15 @@
 /data_output/sens/df_agents_ct_exp_sens1.csv
 /data_output/sens/df_agents_ct_exp_sens2.csv
 
-/data_output/*
+/data_output/eval/df_eval_agents.csv
+/data_output/reg/df_agents_reg.parquet
+
+#/data_output/*
 !/data_output/.gitkeep
 
-/img
+/img/*
+!/img/.gitkeep
+
 /paper/*
 !/paper/main.tex
 /submission
