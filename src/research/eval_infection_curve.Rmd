@@ -1,0 +1,97 @@
+---
+title: "Untitled"
+output: html_document
+date: "2024-02-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+library(here)
+
+here()
+rm(list = ls())
+gc()
+```
+
+```{r}
+df_dates <- as.data.frame(arrow::open_dataset(here::here("data_output/sens/df_dates_senslocal_end_dates.parquet")))
+df_dates$date <- as.Date(df_dates$date)
+head(df_dates)
+```
+
+```{r}
+df_dates$Prioritization <- factor(
+    x=df_dates$contact_tracing_population_sort_mode,
+    levels=c("random", "super-spreaders", "young", "old", "household_size", "inc_rank_emp", "inc_rank_sim", "age"),
+    labels=c("Random", "Age+HH", "Young", "Old", "HH", "Inc. emp.", "Inc. sim.", "Age")
+  )
+
+df_dates$share_currently_infected <- df_dates$n_currently_infected / df_dates$n_agents
+df_dates$share_currently_infected_and_prio <- df_dates$n_currently_infected_and_prio / df_dates$n_agents
+
+df_dates_mean <- aggregate(
+ x=list(
+   "n_currently_infected"=df_dates$n_currently_infected,
+   "share_currently_infected"=df_dates$share_currently_infected
+   ),
+ by=list(
+   "Prioritization"=df_dates$Prioritization, 
+   "contact_tracing_max_currently_traced"=df_dates$contact_tracing_max_currently_traced,
+   "ct_start_date"=df_dates$ct_start_date,
+   "end_date"=df_dates$end_date,
+   "date"=df_dates$date
+   ),
+ FUN=mean
+)
+
+df_dates_zero <- df_dates[df_dates$contact_tracing_frac==0,]
+df_dates_mean_zero <- aggregate(
+ x=list(
+   "n_currently_infected"=df_dates_zero$n_currently_infected,
+   "share_currently_infected"=df_dates_zero$share_currently_infected
+   ),
+ by=list(
+   "date"=df_dates_zero$date,
+   "end_date"=df_dates_zero$end_date,
+   "contact_tracing_max_currently_traced"=df_dates_zero$contact_tracing_max_currently_traced
+   ),
+ FUN=mean
+)
+
+
+```
+
+```{r}
+(
+  ggplot()
+  + geom_line(data=df_dates_mean_zero, mapping=aes(x=date, y=share_currently_infected))
+)
+```
+
+```{r}
+df_dates_mean_zero["Prioritization"] <- "No intervention"
+```
+
+```{r}
+
+(
+  ggplot(data=df_dates_mean[df_dates_mean$date > as.Date("2022-06-01"),], mapping=aes(x=date, y=share_currently_infected, color=Prioritization))
+  + theme_bw()
+  + geom_line(data=df_dates_mean_zero[df_dates_mean_zero$date > as.Date("2022-06-01"),], mapping=aes(x=date, y=share_currently_infected), lwd=1)
+  + geom_line()
+  + facet_grid(row=vars(end_date))
+  + xlab("Day")
+  + ylab("Share of currently infected agents")
+)
+ggsave(here("img/fig_infection_curves.pdf"), width = 10, height = 20, dpi = 300)
+ggsave(here("img/fig_infection_curves.png"), width = 10, height = 20, dpi = 300)
+```
+
+
+
+

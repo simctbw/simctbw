@@ -1,0 +1,493 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggplot2)
+library(pscl)
+library(MASS)
+library(boot)
+library(sjPlot)
+library(lme4)
+library(glmmTMB)
+library(jtools)
+library(here)
+library(interactions)
+library(vroom)
+library(ggpubr)
+
+source(here("src/research/def_data_prep.R"))
+```
+
+```{r}
+df_agents_exp_raw <- arrow::read_parquet(here("data_output/reg/df_agents_reg.parquet"))
+```
+
+
+## Data validation
+
+```{r}
+df <- df_agents_exp_raw
+```
+
+
+### Gender
+
+```{r}
+df_emp_gender <- read.csv(here("data_input/population_bw/gender_bw.csv"), sep=";")
+names(df_emp_gender) <- c("gender", "freq")
+df_emp_gender$rel_freq <- df_emp_gender$freq / sum(df_emp_gender$freq)
+df_emp_gender$source <- "Empirical"
+
+df_sim_gender <- data.frame(table(df$gender))
+names(df_sim_gender) <- c("gender", "freq")
+df_sim_gender$rel_freq <- df_sim_gender$freq / sum(df_sim_gender$freq)
+df_sim_gender$source <- "Simulation"
+df_sim_gender$gender <- ifelse(df_sim_gender$gender==1, "Male", "Female")
+
+df_gender <- rbind(df_sim_gender, df_emp_gender)
+
+g_gender <- (
+  ggplot(data=df_gender, mapping=aes(x=gender, y=rel_freq, group=source, fill=source))
+  + geom_bar(stat="identity", position = "dodge")
+  + theme_bw()
+  + theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
+  + xlab("Gender")
+  + ylab("Share")
+  + ggtitle("Validation: Gender")
+  + scale_fill_discrete(name = "Data source:")
+  + ylim(0,0.75)
+  + theme(plot.margin = unit(c(1,1,1,1), 'lines'))
+  + theme(aspect.ratio=1)
+  
+)
+g_gender
+```
+
+
+### Household size
+
+```{r}
+df_emp_household_size <- read.csv(here("data_input/population_bw/household_bw.csv"), sep=";")
+names(df_emp_household_size) <- c("household_size", "freq")
+df_emp_household_size$source <- "Empirical"
+df_emp_household_size$rel_freq <- df_emp_household_size$freq / sum(df_emp_household_size$freq)
+df_emp_household_size$household_size <- factor(df_emp_household_size$household_size, levels=c("1", "2", "3", "4", ">=5"), ordered = TRUE)
+
+df$household_size[df$household_size >= 5] <- ">=5"
+df$household_size <- factor(df$household_size, levels=c("1", "2", "3", "4", ">=5"), ordered = TRUE)
+
+df_sim_household_size <- data.frame(table(df[!duplicated(df$unique_household_id), "household_size"]))
+names(df_sim_household_size) <- c("household_size", "freq")
+df_sim_household_size$source <- "Simulation"
+df_sim_household_size$rel_freq <- df_sim_household_size$freq / sum(df_sim_household_size$freq)
+
+df_household_size <- rbind(df_emp_household_size, df_sim_household_size)
+```
+
+```{r}
+g_hh <- (
+  ggplot(data=df_household_size, mapping=aes(x=household_size, y=rel_freq, group=source, fill=source))
+  + geom_bar(stat="identity", position = "dodge")
+  + ylim(0,NA)
+  + theme_bw()
+  + theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
+  + ylim(0,0.5)
+  + ggtitle("Validation: Household size")
+  + xlab("Household size")
+  + ylab("Share")
+  + scale_fill_discrete(name = "Data source:")
+  + theme(plot.margin = unit(c(1,1,1,1), 'lines'))
+  + theme(aspect.ratio=1)
+)
+g_hh
+```
+
+
+### Age
+
+```{r}
+df_emp_age <- read.csv(here("data_input/population_bw/distribution_age_bw.csv"), sep=";")
+names(df_emp_age) <- c("age", "freq", "rel_freq")
+df_emp_age$source <- "Empirical"
+
+df_sim_age <- data.frame(table(df$age_group_5))
+names(df_sim_age) <- c("age", "freq")
+df_sim_age$rel_freq <- df_sim_age$freq / sum(df_sim_age$freq)
+df_sim_age$source <- "Simulation"
+
+df_age <- rbind(df_sim_age, df_emp_age)
+
+g_age <- (
+  ggplot(data=df_age, mapping=aes(x=age, y=rel_freq, group=source, color=source))
+  + geom_point()
+  + geom_line()
+  + ylim(0,0.1)
+  + theme_bw()
+  + theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
+  + ggtitle("Validation: Age")
+  + ylab("Share")
+  + xlab("Age")
+  + guides(color=guide_legend(title="Data source:"))
+  + theme(plot.margin = unit(c(1,1,1,1), 'lines'))
+  + theme(aspect.ratio=1)
+  
+)
+g_age
+```
+
+```{r}
+g_gender_age_hh <- ggpubr::ggarrange(g_gender, g_age, g_hh, ncol=3, labels = c("A", "B", "C"), common.legend = TRUE, legend="bottom")
+g_gender_age_hh
+
+ggsave(here("img/fig_eval_gender_age_hh.pdf"), width=14, height=5, dpi=300)
+ggsave(here("img/fig_eval_gender_age_hh.png"), width=14, height=5, dpi=300)
+```
+
+
+### Income, houshold size and vulnerability
+
+```{r}
+# load and merge homeoffice-data
+df_homeoffice <- read.csv(here("data_input/homeoffice/Alipouretal_WFH_Germany-master/Alipouretal_WFH_Germany-master/wfh_nace2.csv"))
+df_agents_exp_raw <- merge(df_agents_exp_raw, df_homeoffice, by.x="nace2_division", by.y="nace2")
+df <- prep_data(df_agents_exp_raw, aggregate_agents=T)$df
+```
+
+
+```{r}
+m <- median(df$eq_hh_income, na.rm=T)
+
+df$income_group <- NA
+df$income_group[df$eq_hh_income < m * 0.7] <- 0
+df$income_group[df$eq_hh_income >= m * 0.7 & df$eq_hh_income < m * 1.5] <- 1
+df$income_group[df$eq_hh_income >= m * 1.5] <- 2
+df$income_group <- factor(df$income_group, levels=c(0,1,2), labels=c("low", "medium", "high"))
+
+df$age_group_rki <- factor(
+  df$age_group_rki, 
+  levels=c(0, 5, 15, 35, 60, 80), 
+  labels=c("0", "5", "15", "35", "60", "80")
+  )
+```
+
+
+```{r}
+g_income_infected <- ggpubr::ggerrorplot(
+  df[!is.na(df$income_group),], 
+  x = "income_group", 
+  y = "ever_infected", 
+  desc_stat = "mean_ci",
+  size=0.2)
+
+g_income_infected <- (
+  g_income_infected
+  + theme_bw()
+  + theme(legend.position = "bottom")
+  + ylim(0,NA)
+  #+ scale_fill_discrete(name = "Infected")
+  + ylab("Risk of infection")
+  + theme(aspect.ratio=1)
+  + xlab("Household income")
+  + ggtitle("Vulnerability by household income")
+  + theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
+  )
+
+g_income_infected
+```
+
+```{r}
+g_hh_infected <- ggpubr::ggerrorplot(
+  df, 
+  x = "household_size", 
+  y = "ever_infected", 
+  desc_stat = "mean_ci",
+  size=0.2)
+
+g_hh_infected <- (
+  g_hh_infected
+  + theme_bw()
+  + theme(legend.position = "bottom")
+  + theme(aspect.ratio=1)
+  + ggtitle("Vulnerability by household size")
+  + xlab("Household size")
+  + ylab("Risk of infection")
+  + theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
+  + ylim(0,NA)
+  )
+
+g_hh_infected
+```
+
+```{r}
+g_vuln <- ggpubr::ggarrange(g_income_infected, g_hh_infected, labels = c("A", "B"))
+g_vuln
+ggsave(here("img/fig_eval_vulnerability.pdf"), width=12, height=5, dpi=300)
+ggsave(here("img/fig_eval_vulnerability.png"), width=12, height=5, dpi=300)
+```
+
+## NB-Regression
+
+```{r}
+# exclude agent 0
+df_agents_exp_raw$patient0 <- as.logical(df_agents_exp_raw$patient0)
+df_agents_exp_raw  <- df_agents_exp_raw[!df_agents_exp_raw$patient0,]
+
+prepped_df_list_exp <- prep_data(df_agents_exp_raw, aggregate_agents=TRUE)
+df <- prepped_df_list_exp$df
+
+df$age_group_rki <- as.factor(df$age_group_rki)
+```
+
+
+```{r}
+m1 <- glm.nb(
+  formula=len_post_infection_chain
+  ~ 
+  + household_size
+  , 
+  data=df)
+
+m2 <- glm.nb(
+  formula=len_post_infection_chain
+  ~ 
+  + age_group_rki
+  , 
+  data=df)
+
+m3 <- glm.nb(
+  formula=len_post_infection_chain
+  ~ 
+  + age_group_rki
+  + household_size
+  , 
+  data=df)
+
+m4 <- glm.nb(
+  formula=len_post_infection_chain
+  ~ 
+  + age_group_rki
+  + household_size
+  + ever_infected
+  , 
+  data=df)
+
+m5 <- glm.nb(
+  formula=len_post_infection_chain
+  ~ 
+  + age_group_rki
+  + household_size
+  + ever_infected
+  + tick_infection
+  , 
+  data=df)
+```
+
+```{r}
+m3
+```
+
+```{r}
+sjPlot::tab_model(m1, m2, m3, m4, m5, p.style = "stars", show.ci = FALSE, auto.label = FALSE)
+```
+
+```{r}
+stargazer::stargazer(
+  m1,
+  m2,
+  m3,
+  #m4,
+  type="text",
+  digits=2,
+  df=F,
+  report="vc*",
+  no.space=T,
+  omit.stat = c("aic", "ll", "theta"),
+  column.sep.width="3pt",
+  dep.var.labels = "Number of infections caused directly or indirectly",
+  apply.coef = exp)
+```
+
+```{r}
+stargazer::stargazer(
+  m1,
+  m2,
+  m3,
+  #m4,
+  type="latex",
+  digits=2,
+  df=F,
+  report="vc*",
+  no.space=T,
+  omit.stat = c("aic", "ll", "theta"),
+  column.sep.width="3pt",
+  dep.var.labels = "Number of infections caused directly or indirectly",
+  apply.coef = exp)
+```
+
+```{r}
+m3
+```
+
+
+
+```{r}
+g_pred_values <- interactions::interact_plot(
+  m3, 
+  pred=household_size, 
+  modx=age_group_rki,
+  x.label="Household size",
+  y.label="Infections caused directly or indirectly",
+  legend.main="Age group (lower bound)",
+  vary.lty=T,
+  robust=T,
+  interval=T)
+
+g_pred_values <- (
+  g_pred_values 
+  + ggtitle("Predicted number of caused infections")
+  + theme_bw()
+  + theme(aspect.ratio=1)
+  + theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
+  + theme(axis.text = element_text(size = 8), axis.title = element_text(size = 9))
+  + theme(plot.margin = unit(c(1,1,1,1), 'lines'))
+  + theme(legend.text=element_text(size=8),legend.title=element_text(size=9))
+  
+)
+
+ggsave(filename=here("img/fig_reg_pred_values.pdf"), plot=g_pred_values, width=5, height=5, dpi=300)
+ggsave(filename=here("img/fig_reg_pred_values.png"), plot=g_pred_values, width=5, height=5, dpi=300)
+
+g_pred_values
+```
+
+
+## Eval replications
+
+```{r}
+counter <- 1
+dfs <- c()
+for (mmi in unique(df$master_model_index)){
+  df_temp <- df[df$master_model_index == mmi,]
+  
+  m <- glm.nb(
+    formula=len_post_infection_chain
+    ~ 
+    + household_size
+    + age_group_rki
+    , 
+    data=df_temp)
+  
+  
+  df_b <- data.frame(
+    model=counter,
+    b_intercept=m$coefficients[["(Intercept)"]],
+    b_household_size=m$coefficients[["household_size"]],
+    b_age_5=m$coefficients[["age_group_rki5"]],
+    b_age_15=m$coefficients[["age_group_rki15"]],
+    b_age_35=m$coefficients[["age_group_rki35"]],
+    b_age_60=m$coefficients[["age_group_rki60"]],
+    b_age_80=m$coefficients[["age_group_rki80"]]
+    )
+  dfs[[counter]] <- df_b
+  counter <- counter + 1
+
+}
+```
+
+```{r}
+df_agg <- do.call(rbind, dfs)
+
+df_mean_b_intercept <- get_replications(df_agg, mean, "b_intercept")
+df_mean_b_household_size <- get_replications(df_agg, mean, "b_household_size")
+df_mean_b_age_5 <- get_replications(df_agg, mean, "b_age_5")
+df_mean_b_age_15 <- get_replications(df_agg, mean, "b_age_15")
+df_mean_b_age_35 <- get_replications(df_agg, mean, "b_age_35")
+df_mean_b_age_60 <- get_replications(df_agg, mean, "b_age_60")
+df_mean_b_age_80 <- get_replications(df_agg, mean, "b_age_80")
+```
+
+```{r}
+plot_list <- list()
+```
+
+```{r}
+g_rep_age <- (
+  ggplot()
+  + geom_point(data=df_mean_b_age_5, mapping=aes(x=n, y=estimate, color="age group 5"))
+  + geom_line(data=df_mean_b_age_5, mapping=aes(x=n, y=estimate, color="age group 5"))
+  
+  + geom_point(data=df_mean_b_age_15, mapping=aes(x=n, y=estimate, color="age group 15"))
+  + geom_line(data=df_mean_b_age_15, mapping=aes(x=n, y=estimate, color="age group 15"))
+  
+  + geom_point(data=df_mean_b_age_35, mapping=aes(x=n, y=estimate, color="age group 35"))
+  + geom_line(data=df_mean_b_age_35, mapping=aes(x=n, y=estimate, color="age group 35"))
+  
+  + geom_point(data=df_mean_b_age_60, mapping=aes(x=n, y=estimate, color="age group 60"))
+  + geom_line(data=df_mean_b_age_60, mapping=aes(x=n, y=estimate, color="age group 60"))
+  
+  + geom_point(data=df_mean_b_age_80, mapping=aes(x=n, y=estimate, color="age group 80"))
+  + geom_line(data=df_mean_b_age_80, mapping=aes(x=n, y=estimate, color="age group 80"))
+  
+  + xlab("Number of simulation models (with 50 internal replications)")
+  + ylab("regression coefficient")
+  + theme(plot.title = element_text(hjust = 0.5), legend.position = "bottom")
+  + ggtitle("Age")
+  #+ theme(aspect.ratio=1)
+)
+g_rep_age
+ggsave(here("img/fig_eval_rep_reg_age.pdf"), width=7, height=5, dpi=300)
+ggsave(here("img/fig_eval_rep_reg_age.png"), width=7, height=5, dpi=300)
+
+plot_list[[3]] <- g_rep_age
+```
+
+```{r}
+g_rep_hh <- (
+  ggplot()
+  + geom_point(data=df_mean_b_household_size, mapping=aes(x=n, y=estimate))
+  + geom_line(data=df_mean_b_household_size, mapping=aes(x=n, y=estimate))
+  + xlab("Number of simulation models (with 50 internal replications)")
+  + ylab("regression coefficient")
+  + theme(plot.title = element_text(hjust = 0.5))
+  + ggtitle("Household size")
+  + ylim(0, NaN)
+  #+ theme(aspect.ratio=1)
+)
+g_rep_hh
+ggsave(here("img/fig_eval_rep_reg_hh.pdf"), width=7, height=5, dpi=300)
+ggsave(here("img/fig_eval_rep_reg_hh.png"), width=7, height=5, dpi=300)
+
+plot_list[[2]] <- g_rep_hh
+```
+
+```{r}
+g_rep_intercept <- (
+  ggplot()
+  + geom_point(data=df_mean_b_intercept, mapping=aes(x=n, y=estimate))
+  + geom_line(data=df_mean_b_intercept, mapping=aes(x=n, y=estimate))
+  + xlab("Number of simulation models (with 50 internal replications)")
+  + ylab("regression coefficient")
+  + theme(plot.title = element_text(hjust = 0.5))
+  + ggtitle("Intercept")
+  #+ theme(aspect.ratio=1)
+  + ylim(NaN, 0)
+)
+g_rep_intercept
+ggsave(here("img/fig_eval_rep_reg_intercept.pdf"), width=7, height=5, dpi=300)
+ggsave(here("img/fig_eval_rep_reg_intercept.png"), width=7, height=5, dpi=300)
+
+plot_list[[1]] <- g_rep_intercept
+```
+
+```{r}
+g_all <- ggarrange(plotlist=plot_list, ncol=1, nrow=3, common.legend = TRUE, legend="bottom")
+g_all
+
+ggsave(here("img/fig_reps_reg.pdf"), width=10, height=20, dpi=300)
+ggsave(here("img/fig_reps_reg.png"), width=10, height=20, dpi=300)
+```
+

@@ -1,0 +1,640 @@
+---
+title: "Main results"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Preperations
+
+```{r}
+rm(list = ls())
+gc()
+library(ggplot2)
+library(ggpubr)
+library(here)
+library(vroom)
+library(data.table)
+library(dplyr)
+source(here("src/research/def_data_prep.R"))
+
+here()
+```
+
+```{r}
+LOAD_AGGR_DATA = FALSE
+PATH <- here::here("data_output/exp")
+```
+
+
+## Aggregate on model level
+
+```{r}
+if (!LOAD_AGGR_DATA){
+  # load data
+  df <- arrow::open_dataset(PATH)
+
+  df_model_list <- c()
+  n_models = 5600
+  steps = 10
+  step_size <- n_models / steps
+  
+  # process the data in smaller chunks
+  for (i in 1:steps) {
+    i <- i - 1
+    lb <- i * step_size
+    ub <- i * step_size + step_size
+    print(c(i, lb, ub))
+      
+    df_model_list[[i+1]] <- df |>
+        
+        # filter by model index to process only a subset of models
+        filter(model_index >= lb & model_index < ub) |>
+        
+        # transform some variables
+        mutate(
+         Prioritization = contact_tracing_population_sort_mode,
+         ever_infected = ifelse(ever_infected == T, 1, 0),
+         ever_icu = ifelse(!is.na(date_icu), 1, 0)
+       ) |>
+      
+        # group by agent (one agent exists in every (50) replication of a model)
+        group_by(
+         Prioritization,
+         contact_tracing_frac,
+         model_index,
+         unique_agent_id
+       ) |>
+      
+       # average on agent level
+       summarize(
+         ever_infected = mean(ever_infected),
+         ever_icu = mean(ever_icu),
+         n_times_contact_tracing = mean(n_times_contact_tracing),
+         n_contacts_traced = mean(n_contacts_traced)
+       ) |>
+      
+      # group by model
+      group_by(
+         Prioritization,
+         contact_tracing_frac,
+         model_index,
+       ) |>
+      
+       # count infections etc. per model
+       summarize(
+         n_infected = sum(ever_infected),
+         n_icu = sum(ever_icu),
+         n_times_contact_tracing = sum(n_times_contact_tracing),
+         n_contacts_traced = sum(n_contacts_traced)
+       ) |>
+       collect()
+  }
+  
+  df <- do.call(rbind, df_model_list)
+  
+  df$Prioritization <- factor(
+      x=df$Prioritization,
+      levels=c(
+        "random",
+        "super-spreaders",
+        "household_size",
+        "age",
+        "inc_rank_sim",
+        "inc_rank_emp",
+        "young",
+        "old"
+        ),
+      labels=c(
+        "1. Random", 
+        "2. HH+Age", 
+        "3. HH", 
+        "4. Age",  
+        "5. Inc. sim.", 
+        "6. Inc. emp.",  
+        "7. Young", 
+        "8 .Old")
+    )
+
+  df <- df[!is.na(df$Prioritization),]
+}
+```
+
+```{r}
+df_ori <- df
+saveRDS(df_ori, file=paste(PATH, "df_aggr.rdata", sep="/"))
+```
+
+```{r}
+if (LOAD_AGGR_DATA){
+  df <- readRDS(here::here("data_output/exp/df_aggr.rdata"))
+}
+```
+
+## Calculate main effect measures
+
+```{r}
+df <- df_ori
+df <- as.data.table(df)
+```
+
+```{r}
+# calculate number of prevented infections
+n_infected_baseline<- mean(df[contact_tracing_frac==0, n_infected])
+df$n_infections_prevented <- n_infected_baseline - df$n_infected
+df$share_infections_prevented <- df$n_infections_prevented / n_infected_baseline
+df$ppt <- df$n_infections_prevented / (df$n_times_contact_tracing + df$n_contacts_traced)
+df$ppt[is.infinite(df$ppt)] <- 0 # set the ppt to 0 if the denominator is 0 (baseline scenarios)
+
+# calculate number of prevented icu
+n_icu_baseline<- mean(df[contact_tracing_frac==0, n_icu])
+df$n_icu_prevented <- n_icu_baseline - df$n_icu
+df$share_icu_prevented <- df$n_icu_prevented / n_icu_baseline
+df$ppt_icu <- df$n_icu_prevented / (df$n_times_contact_tracing + df$n_contacts_traced)
+df$ppt_icu[is.infinite(df$ppt_icu)] <- 0 # set the ppt to 0 if the denominator is 0 (baseline scenarios)
+```
+
+
+## Eval replications
+
+```{r}
+df <- as.data.frame(df)
+
+counter <- 1
+dfs <- c()
+for (prio in unique(df$Prioritization)){
+  for (ctf in unique(df$contact_tracing_frac)){
+    df_temp <- get_replications(df[df$Prioritization == prio & df$contact_tracing_frac == ctf,], mean, "n_infections_prevented")
+    df_temp$Prioritization <- prio
+    df_temp$contact_tracing_frac <- ctf
+    dfs[[counter]] <- df_temp
+    counter <- counter + 1
+  }
+}
+
+df_mean <- do.call(rbind, dfs)
+
+plots <- list()
+counter <- 1
+for (ctf in sort(unique(df_mean$contact_tracing_frac))){
+  (
+    g <- ggplot(data=df_mean[df_mean$contact_tracing_frac == ctf,], mapping=aes(x=n, y=estimate, color=Prioritization))
+    + geom_point()
+    + geom_line()
+    #+ ylim(0, 1200)
+    + xlab("Number of models (with 50 replications)")
+    + ylab("Average number of prevented infections")
+    + ggtitle(paste("Share of prioritized agents = ", as.character(ctf), sep=""))
+    + theme(plot.title = element_text(hjust = 0.5))
+  )
+  if (ctf > 0){
+    plots[[counter]] <- g
+    counter <- counter + 1
+  }
+}
+g <- ggarrange(plotlist=plots, ncol = 2, nrow = 3, common.legend=TRUE, legend="bottom")
+ggsave(here(paste("img/fig_reps_infections.pdf", sep="")), width=12, height=16)
+ggsave(here(paste("img/fig_reps_infections.png", sep="")), width=12, height=16)
+g
+```
+
+```{r}
+df <- as.data.frame(df)
+
+counter <- 1
+dfs <- c()
+for (prio in unique(df$Prioritization)){
+  for (ctf in unique(df$contact_tracing_frac)){
+    df_temp <- get_replications(df[df$Prioritization == prio & df$contact_tracing_frac == ctf,], mean, "ppt")
+    df_temp$Prioritization <- prio
+    df_temp$contact_tracing_frac <- ctf
+    dfs[[counter]] <- df_temp
+    counter <- counter + 1
+  }
+}
+
+df_mean <- do.call(rbind, dfs)
+
+plots <- list()
+counter <- 1
+for (ctf in sort(unique(df_mean$contact_tracing_frac))){
+  
+  (
+    g <- ggplot(data=df_mean[df_mean$contact_tracing_frac == ctf,], mapping=aes(x=n, y=estimate, color=Prioritization))
+    + geom_point()
+    + geom_line()
+    #+ ylim(0, 1200)
+    + xlab("Number of models (with 50 replications)")
+    + ylab("Average number of prevented infections per tracing")
+    + ggtitle(paste("Experiments: Share of prioritized agents = ", as.character(ctf), sep=""))
+    + theme(plot.title = element_text(hjust = 0.5))
+  )
+  if (ctf > 0){
+    plots[[counter]] <- g
+    counter <- counter + 1
+  }
+}
+
+g <- ggarrange(plotlist=plots, ncol = 2, nrow = 3, common.legend=TRUE, legend="bottom")
+ggsave(here(paste("img/fig_reps_ppt.pdf", sep="")), width=12, height=16)
+ggsave(here(paste("img/fig_reps_ppt.png", sep="")), width=12, height=16)
+g
+```
+
+
+## Aggregate per scenario
+
+```{r}
+# average by scenario
+df_aggr <- aggregate(
+ x=list(
+   "n_infected"=df$n_infected,
+   "n_icu"=df$n_icu,
+   "n_times_contact_tracing"=df$n_times_contact_tracing,
+   "n_infections_prevented"=df$n_infections_prevented,
+   "share_infections_prevented"=df$share_infections_prevented,
+   "ppt"=df$ppt,
+   "n_icu_prevented"=df$n_icu_prevented,
+   "share_icu_prevented"=df$share_icu_prevented,
+   "ppt_icu"=df$ppt_icu
+   ),
+ by=list(
+   "Prioritization"=df$Prioritization, 
+   "contact_tracing_frac"=df$contact_tracing_frac
+   ),
+ FUN=mean
+)
+
+df_aggr[is.na(df_aggr$ppt), "ppt"] <- 0
+df_aggr[is.na(df_aggr$ppt_icu), "ppt_icu"] <- 0
+
+# remove scenarios with 0 contact tracing
+df_no_zero_frac <- df[df$contact_tracing_frac>0,]
+```
+
+
+# Results
+
+```{r}
+add_space <- function(){theme(plot.margin = unit(c(1,1,1,1), 'lines'))}
+xlabel <- function(){xlab("Share of prioritized agents")}
+axis_font_size <- function(){theme(axis.text = element_text(size = 8), axis.title = element_text(size = 9))}
+rotate_x_labels <- function(){theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))}
+xlabel_prio <- function(){xlab("Prioritization")}
+whitespace_title <- function(){ggtitle(" ")}
+
+dot_size_1 <- 0.1
+
+WIDTH = 8
+HEIGHT = 4
+```
+
+
+## Share of prevented infections (total)
+
+```{r}
+g_mean_prinf <- (
+  ggpubr::ggerrorplot(
+    data=df_no_zero_frac,
+    x="Prioritization",
+    y="share_infections_prevented",
+    color="Prioritization",
+    desc_stat="mean_ci",
+    size=dot_size_1,
+    add.params = list(size = 0.1, alpha = 0.2)
+  ) 
+  + grids(linetype = "dashed")
+  + theme_bw()
+  + add_space()
+  + axis_font_size()
+  + theme(aspect.ratio=1)
+  + rotate_x_labels()
+  + xlabel_prio()
+  + ylab("Share of prevented infections")
+  + whitespace_title()
+)
+
+g_mean_prinf
+```
+
+
+```{r}
+aggregate(
+  df_no_zero_frac$share_infections_prevented,
+  list(
+    df_no_zero_frac$Prioritization
+    ), FUN=mean)
+```
+
+
+## Prevented infections per share of prioritized agents
+
+```{r}
+g_prevented_infections <- (
+  ggplot(
+    data=df_aggr, 
+    mapping=aes(
+      x=contact_tracing_frac, 
+      y=share_infections_prevented, 
+      color=Prioritization
+      )
+    )
+  + geom_line(data=df_aggr[df_aggr$Prioritization=="1. Random",], size=1.25)
+  + geom_line(alpha=0.5, size=0.5)
+  + geom_line(data=df_aggr[df_aggr$Prioritization=="1. Random",], width=2)
+  
+  + geom_point(alpha=0.8)
+  + xlabel()
+  + ylab("Share of prevented infections")
+  + theme_bw()
+  + add_space()
+  + axis_font_size()
+  + theme(plot.title = element_text(size=9, face="bold", hjust = 0.5))
+  + theme(aspect.ratio=1)
+  + whitespace_title()
+)
+g_prevented_infections
+```
+
+## Summary: Prevented infections
+
+```{r}
+
+ct_infections <- cowplot::plot_grid(
+  g_mean_prinf + theme(legend.position = "none"),
+  g_prevented_infections + theme(legend.position = "none"),
+  align="vh",
+  labels = c("A", "B"),
+  nrow = 1
+  )
+
+ct_infections <- annotate_figure(
+  ct_infections, 
+  top = text_grob("Prevented infections", face = "bold", 
+  size = 14),
+  )
+ggsave(here("img/fig_exp_infections.pdf"), width = WIDTH, height = HEIGHT, dpi = 300)
+ggsave(here("img/fig_exp_infections.png"), width = WIDTH, height = HEIGHT, dpi = 300)
+ct_infections
+```
+
+
+
+## Prevented infections per tracing (total)
+
+```{r}
+g_mean_ppt <- (
+  ggpubr::ggerrorplot(
+  data=df_no_zero_frac,
+  x="Prioritization",
+  y="ppt",
+  color="Prioritization",
+  desc_stat="mean_ci",
+  size=dot_size_1,
+  add.params = list(size = 0.1, alpha = 0.2),
+  #add="jitter"
+  ) 
+  + grids(linetype = "dashed")
+  + theme_bw()
+  + add_space()
+  + axis_font_size()
+  + theme(aspect.ratio=1)
+  + rotate_x_labels()
+  + xlabel_prio()
+  + ylab("Infections prevented per tracing")
+  + axis_font_size()
+  + theme(aspect.ratio=1)
+  + rotate_x_labels()
+  + whitespace_title()
+  + theme(legend.position = "none")
+)
+
+g_mean_ppt
+```
+```{r}
+aggregate(
+  df_no_zero_frac$ppt,
+  list(
+    df_no_zero_frac$Prioritization
+    ), FUN=mean)
+```
+
+
+## Prevented infections per tracing per share of prio. agents
+
+```{r}
+g_ppt_line <- (
+  ggplot(
+    data=df_aggr, 
+    mapping=aes(
+      x=contact_tracing_frac, 
+      y=ppt, 
+      color=Prioritization
+      )
+    )
+  + geom_line(data=df_aggr[df_aggr$Prioritization=="1. Random",], size=1.25)
+  + geom_line(alpha=0.5, size=0.5)
+  + geom_point()
+  + xlabel()
+  + theme_bw()
+  + add_space()
+  + axis_font_size()
+  + ylab("Infections prevented per tracing")
+  + scale_color_discrete(name = "Prioritization")
+  + theme(plot.title = element_text(size=9, face="bold", hjust = 0.5))
+  + theme(aspect.ratio=1)
+  + whitespace_title()
+)
+g_ppt_line
+```
+
+
+## Summary: Prevented infections per tracing
+
+```{r}
+ct_ppt <- cowplot::plot_grid(
+  g_mean_ppt + theme(legend.position = "none"),
+  g_ppt_line + theme(legend.position = "none"),
+  align="vh",
+  labels = c("A", "B"),
+  nrow = 1
+  )
+
+ct_ppt <- annotate_figure(
+  ct_ppt, 
+  top = text_grob("Prevented infections per tracing", face = "bold", 
+  size = 14),
+  )
+ggsave(here("img/fig_exp_ppt.pdf"), width = WIDTH, height = HEIGHT, dpi = 300)
+ggsave(here("img/fig_exp_ppt.png"), width = WIDTH, height = HEIGHT, dpi = 300)
+ct_ppt
+```
+
+
+## Share of prevented hospitalizations (total)
+
+```{r}
+
+g_mean_pricu <- (
+  ggpubr::ggerrorplot(
+    data=df_no_zero_frac,
+    x="Prioritization",
+    y="share_icu_prevented",
+    color="Prioritization",
+    desc_stat="mean_ci",
+    size=dot_size_1,
+    add.params = list(size = 0.1, alpha = 0.2)
+  ) 
+  + grids(linetype = "dashed")
+  + theme_bw()
+  + add_space()
+  + axis_font_size()
+  + theme(aspect.ratio=1)
+  + rotate_x_labels()
+  + xlabel_prio()
+  + ylab("Share of prevented hospitalizations")
+  + whitespace_title()
+  + theme(legend.position = "none")
+)
+
+g_mean_pricu
+```
+
+
+## Prevented hospitalizations per tracing per share of prioritized agents
+
+```{r}
+g_prevented_icu <- (
+  ggplot(
+    data=df_aggr, 
+    mapping=aes(
+      x=contact_tracing_frac, 
+      y=share_icu_prevented, 
+      color=Prioritization
+      )
+    )
+  + geom_line(data=df_aggr[df_aggr$Prioritization=="1. Random",], size=1.25)
+  + geom_line(alpha=0.5, size=0.5)
+  + geom_point(alpha=0.8)
+  + xlabel()
+  + ylab("Share of prevented hospitalizations")
+  + theme_bw()
+  + add_space()
+  + axis_font_size()
+  + theme(plot.title = element_text(size=9, face="bold", hjust = 0.5))
+  + theme(aspect.ratio=1)
+  + theme(legend.position = "none")
+  + whitespace_title()
+  )
+g_prevented_icu
+```
+
+
+## Summary: Prevented hospitalizations
+
+```{r}
+ct_icu <- cowplot::plot_grid(
+  g_mean_pricu + theme(legend.position = "none"),
+  g_prevented_icu + theme(legend.position = "none"),
+  align="vh",
+  labels = c("A", "B"),
+  nrow = 1
+  )
+
+ct_icu <- annotate_figure(
+  ct_icu, 
+  top = text_grob("Prevented hospitalizations", face = "bold", 
+  size = 14),
+  )
+ggsave(here("img/fig_exp_icu.pdf"), width = WIDTH, height = HEIGHT, dpi = 300)
+ggsave(here("img/fig_exp_icu.png"), width = WIDTH, height = HEIGHT, dpi = 300)
+ct_icu
+```
+
+
+## Prevented hospitalizations per tracing (total)
+
+```{r}
+g_mean_ppt_icu <- (
+  ggpubr::ggerrorplot(
+  data=df_no_zero_frac,
+  color="Prioritization",
+  x="Prioritization",
+  y="ppt_icu",
+  desc_stat="mean_ci",
+  size=dot_size_1,
+  add.params = list(size = 0.1, alpha = 0.2),
+  ) 
+  + grids(linetype = "dashed")
+  + theme_bw()
+  + add_space()
+  + axis_font_size()
+  + theme(aspect.ratio=1)
+  + rotate_x_labels()
+  + xlabel_prio()
+  + ylab("Hospitalizations prevented per tracing")
+  + axis_font_size()
+  + theme(aspect.ratio=1)
+  + rotate_x_labels()
+  + whitespace_title()
+  + theme(legend.position = "none")
+)
+
+g_mean_ppt_icu
+
+aggregate(df_no_zero_frac$ppt_icu, list(
+  df_no_zero_frac$Prioritization
+  ), FUN=mean)
+```
+
+
+## Prevented hospitalizations per tracing per share of prio. agents
+
+```{r}
+g_ppt_icu_line <- (
+  ggplot(
+    data=df_aggr,
+    mapping=aes(
+      x=contact_tracing_frac, 
+      y=ppt_icu, 
+      color=Prioritization
+      )
+    )
+  + geom_line(data=df_aggr[df_aggr$Prioritization=="1. Random",], size=1.25)
+  + geom_line(alpha=0.5, size=0.5)
+  + geom_point(alpha=0.8)
+  + xlabel()
+  + theme_bw()
+  + add_space()
+  + axis_font_size()
+  + ylab("Hospitalizations prevented per tracing")
+  + scale_color_discrete(name = "Prioritization")
+  + theme(plot.title = element_text(size=9, face="bold", hjust = 0.5))
+  + theme(aspect.ratio=1)
+  + theme(legend.position = "none")
+  + whitespace_title()
+)
+g_ppt_icu_line
+```
+
+```{r}
+ct_ppt_icu <- cowplot::plot_grid(
+  g_mean_ppt_icu + theme(legend.position = "none"),
+  g_ppt_icu_line + theme(legend.position = "none"),
+  align="vh",
+  labels = c("A", "B"),
+  nrow = 1
+  )
+
+ct_ppt_icu <- annotate_figure(
+  ct_ppt_icu, 
+  top = text_grob("Prevented hospitalizations per tracing", face = "bold", 
+  size = 14),
+  )
+ggsave(here("img/fig_exp_ppt_icu.pdf"), width = WIDTH, height = HEIGHT, dpi = 300)
+ggsave(here("img/fig_exp_ppt_icu.png"), width = WIDTH, height = HEIGHT, dpi = 300)
+ct_ppt_icu
+```
+

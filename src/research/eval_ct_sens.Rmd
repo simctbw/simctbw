@@ -1,0 +1,342 @@
+---
+title: "Main results"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Preperations
+
+```{r}
+rm(list = ls())
+gc()
+library(ggplot2)
+library(ggpubr)
+library(here)
+library(vroom)
+library(data.table)
+library(dplyr)
+source(here("src/research/def_data_prep.R"))
+
+here()
+```
+
+```{r}
+# load data
+
+# selection fracs
+#df <- arrow::open_dataset(here::here("data_output/run_senslocal_contact_fracs"))
+#sens_param_name <- "contact_tracing_contact_selection_frac"
+
+# iso level
+#df <- arrow::open_dataset(here::here("data_output/run_senshelix_iso_level"))
+#sens_param_name <- "ct_isolation_level"
+
+# days isolation
+#df <- arrow::open_dataset(here::here("data_output/run_senslocal_days_isolation"))
+#sens_param_name <- "n_days_contact_tracing_isolation"
+
+# max traced
+#df <- arrow::open_dataset(here::here("data_output/run_senshelix_max_traced"))
+#sens_param_name <- "contact_tracing_max_currently_traced"
+
+# duration inf
+#df <- arrow::open_dataset(here::here("data_output/run_senslocal_duration_infectious"))
+#sens_param_name <- "duration_infectious"
+
+# infection p
+#df <- arrow::open_dataset(here::here("data_output/run_senslocal_inf_p_shift"))
+#sens_param_name <- "inf_p_shift"
+
+# start date
+#df <- arrow::open_dataset(here::here("data_output/run_senslocal_start_dates"))
+#sens_param_name <- "ct_start_date"
+
+# end date
+#df <- arrow::open_dataset(here::here("data_output/run_senslocal_end_dates"))
+#sens_param_name <- "end_date"
+
+
+```
+
+```{r}
+names(df)
+```
+
+## Aggregate on model level
+
+```{r}
+df_model_list <- c()
+n_models = 5600
+steps = 20
+step_size <- n_models / steps
+
+# process the data in smaller chunks
+for (i in 1:steps) {
+  i <- i - 1
+  lb <- i * step_size
+  ub <- i * step_size + step_size
+  print(c(i, lb, ub))
+    
+  df_model_list[[i+1]] <- df |>
+      
+      # filter by model index to process only a subset of models
+      filter(model_index >= lb & model_index < ub) |>
+      
+      # transform some variables
+      mutate(
+       Prioritization = contact_tracing_population_sort_mode,
+       ever_infected = ifelse(ever_infected == T, 1, 0),
+       ever_icu = ifelse(!is.na(date_icu), 1, 0)
+     ) |>
+    
+      # group by agent (one agent exists in every (50) replication of a model)
+      group_by(
+       Prioritization,
+       contact_tracing_frac,
+       duration_infectious,
+       inf_p_shift,
+       contact_tracing_max_currently_traced,
+       ct_isolation_level,
+       n_days_contact_tracing_isolation,
+       contact_tracing_contact_selection_frac,
+       ct_start_date,
+       end_date,
+       model_index,
+       unique_agent_id
+     ) |>
+    
+     # average on agent level
+     summarize(
+       ever_infected = mean(ever_infected),
+       ever_icu = mean(ever_icu),
+       n_times_contact_tracing = mean(n_times_contact_tracing),
+       n_contacts_traced = mean(n_contacts_traced)
+     ) |>
+    
+    # group by model
+    group_by(
+       Prioritization,
+       contact_tracing_frac,
+       duration_infectious,
+       inf_p_shift,
+       contact_tracing_max_currently_traced,
+       n_days_contact_tracing_isolation,
+       contact_tracing_contact_selection_frac,
+       ct_isolation_level,
+       ct_start_date,
+       end_date,
+       model_index,
+     ) |>
+    
+     # count infections etc. per model
+     summarize(
+       n_infected = sum(ever_infected),
+       n_icu = sum(ever_icu),
+       n_times_contact_tracing = sum(n_times_contact_tracing),
+       n_contacts_traced = sum(n_contacts_traced)
+     ) |>
+     collect()
+}
+
+df <- do.call(rbind, df_model_list)
+```
+
+```{r}
+df$Prioritization <- factor(
+      x=df$Prioritization,
+      levels=c(
+        "random",
+        "super-spreaders",
+        "household_size",
+        "age",
+        "inc_rank_sim",
+        "inc_rank_emp",
+        "young",
+        "old"
+        ),
+      labels=c(
+        "1. Random", 
+        "2. HH+Age", 
+        "3. HH", 
+        "4. Age",  
+        "5. Inc. sim.", 
+        "6. Inc. emp.",  
+        "7. Young", 
+        "8 .Old")
+    )
+
+df <- df[!is.na(df$Prioritization),]
+```
+
+```{r}
+df_ori <- df
+save(df_ori, file=paste(here("data_output/sens/"), "df_sens_aggr_", sens_param_name, ".R", sep=""))
+```
+
+```{r}
+df <- load(paste(here("data_output/sens/"), "df_sens_aggr_", sens_param_name, ".R", sep=""))
+```
+
+
+## Calculate main effect measures
+
+```{r}
+df <- df_ori
+df <- as.data.table(df)
+```
+
+```{r}
+unique(df$contact_tracing_frac)
+```
+
+```{r}
+unique(df[[sens_param_name]])
+```
+
+
+```{r}
+df_list <- list()
+index <- 1
+for (value in unique(df[[sens_param_name]])){
+  print(value)
+  df_temp <- df[df[[sens_param_name]] == value,]
+  # calculate number of prevented infections
+  n_infected_baseline<- mean(df_temp[contact_tracing_frac==0, n_infected])
+  df_temp$n_infections_prevented <- n_infected_baseline - df_temp$n_infected
+  df_temp$share_infections_prevented <- df_temp$n_infections_prevented / n_infected_baseline
+  df_temp$ppt <- df_temp$n_infections_prevented / (df_temp$n_times_contact_tracing + df_temp$n_contacts_traced)
+  df_temp$ppt[is.infinite(df_temp$ppt)] <- 0 # set the ppt to 0 if the denominator is 0 (baseline scenarios)
+  
+  # calculate number of prevented icu
+  n_icu_baseline<- mean(df_temp[contact_tracing_frac==0, n_icu])
+  df_temp$n_icu_prevented <- n_icu_baseline - df_temp$n_icu
+  df_temp$share_icu_prevented <- df_temp$n_icu_prevented / n_icu_baseline
+  df_temp$ppt_icu <- df_temp$n_icu_prevented / (df_temp$n_times_contact_tracing + df_temp$n_contacts_traced)
+  df_temp$ppt_icu[is.infinite(df_temp$ppt_icu)] <- 0 # set the ppt to 0 if the denominator is 0 (baseline scenarios)
+  
+  df_list[[index]] <- df_temp
+  index <- index + 1
+}
+
+df <- do.call(rbind, df_list)
+```
+
+
+
+## Aggregate per scenario
+
+```{r}
+# average by scenario
+df_aggr <- aggregate(
+ x=list(
+   "n_infected"=df$n_infected,
+   "n_icu"=df$n_icu,
+   "n_times_contact_tracing"=df$n_times_contact_tracing,
+   "n_infections_prevented"=df$n_infections_prevented,
+   "share_infections_prevented"=df$share_infections_prevented,
+   "ppt"=df$ppt,
+   "n_icu_prevented"=df$n_icu_prevented,
+   "share_icu_prevented"=df$share_icu_prevented,
+   "contact_tracing_contact_selection_frac" = df$contact_tracing_contact_selection_frac,
+   "ppt_icu"=df$ppt_icu
+   ),
+ by=list(
+   "Prioritization"=df$Prioritization, 
+   "contact_tracing_frac"=df$contact_tracing_frac,
+   "duration_infectious"=df$duration_infectious,
+   "contact_tracing_max_currently_traced"=df$contact_tracing_max_currently_traced,
+   "inf_p_shift"=df$inf_p_shift,
+   "ct_isolation_level"=df$ct_isolation_level,
+   "n_days_contact_tracing_isolation"=df$n_days_contact_tracing_isolation,
+   "ct_start_date"=df$ct_start_date,
+   "end_date"=df$end_date
+   ),
+ FUN=mean
+)
+
+df_aggr[is.na(df_aggr$ppt), "ppt"] <- 0
+df_aggr[is.na(df_aggr$ppt_icu), "ppt_icu"] <- 0
+
+# remove scenarios with 0 contact tracing
+df_no_zero_frac <- df[df$contact_tracing_frac>0,]
+```
+
+
+# Results
+
+```{r}
+add_space <- function(){theme(plot.margin = unit(c(1,1,1,1), 'lines'))}
+xlabel <- function(){xlab("Share of prioritized agents")}
+axis_font_size <- function(){theme(axis.text = element_text(size = 8), axis.title = element_text(size = 9))}
+rotate_x_labels <- function(){theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))}
+xlabel_prio <- function(){xlab("Prioritization")}
+whitespace_title <- function(){ggtitle(" ")}
+
+dot_size_1 <- 0.1
+
+WIDTH = 8
+HEIGHT = 4
+```
+
+
+```{r}
+
+y_labs <- list(
+  "share_infections_prevented"="Share of prevented infections",
+  "ppt"="Prevented infections per tracing",
+  "share_icu_prevented"="Share of prevented hospitalizations",
+  "ppt_icu"="Prevented hospitalizations per tracing"
+  )
+
+figs = c()
+
+i <- 0
+for (y in c("share_infections_prevented", "ppt", "share_icu_prevented", "ppt_icu")){
+  i <- i + 1
+  
+  g <- (
+    ggpubr::ggerrorplot(
+      data=df_no_zero_frac,
+      x="Prioritization",
+      y=y,
+      color="Prioritization",
+      desc_stat="mean_ci",
+      size=dot_size_1,
+      add.params = list(size = 0.1, alpha = 0.2)
+    ) 
+    + grids(linetype = "dashed")
+    + theme_bw()
+    + add_space()
+    + axis_font_size()
+    + theme(aspect.ratio=1)
+    + rotate_x_labels()
+    + xlabel_prio()
+    + ylab(y_labs[y])
+    + whitespace_title()
+    + facet_wrap(as.formula(paste("~", sens_param_name)))
+    + theme(legend.position = "none")
+    )
+  
+  figs[[i]] <- g
+  print(g)
+}
+
+g <- ggarrange(plotlist=figs, ncol = 1, nrow = 4)
+ggsave(here(paste("img/fig_sens_", sens_param_name, ".pdf", sep="")), width=6, height=12)
+ggsave(here(paste("img/fig_sens_", sens_param_name, ".png", sep="")), width=6, height=12)
+g
+```
+
+
+
+
+
+
+
+
+
+
+

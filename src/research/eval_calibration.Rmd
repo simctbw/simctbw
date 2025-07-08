@@ -1,0 +1,332 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggplot2)
+library(ggpubr)
+library(viridis)
+library(here)
+
+source(here("src/research/def_data_prep.R"))
+```
+
+
+## Eval incidence
+
+```{r}
+df_incidence <- read.csv(here("data_output/eval/df_eval_infections_inc7.csv"))
+df_incidence$date <- as.Date(df_incidence$date)
+
+df_incidence$sd_incidence_7_days_sim <- ave(
+  df_incidence$incidence_7_days_sim,
+  df_incidence$date,
+  FUN = sd
+)
+
+df_incidence$se_incidence_7_days_sim <- df_incidence$sd_incidence_7_days_sim / sqrt(max(df_incidence$replication))
+df_incidence$ci_incidence_7_days_sim <- df_incidence$se_incidence_7_days_sim * 1.96
+
+df_incidence_agg <- aggregate(
+  x=list(
+    "incidence_7_days_sim"=df_incidence$incidence_7_days_sim,
+    "ci_incidence_7_days_sim"=df_incidence$ci_incidence_7_days_sim),
+  by=list("date"=df_incidence$date),
+  FUN=mean
+)
+
+df_incidence_agg$ci_low_incidence_7_days_sim <- df_incidence_agg$incidence_7_days_sim - df_incidence_agg$ci_incidence_7_days_sim
+df_incidence_agg$ci_high_incidence_7_days_sim <- df_incidence_agg$incidence_7_days_sim + df_incidence_agg$ci_incidence_7_days_sim
+
+head(df_incidence)
+```
+
+```{r}
+g_inc <- (
+  ggplot()
+  + geom_line(data=df_incidence, mapping=aes(x=date, y=incidence_7_days_emp, color="Empirical"))
+  + geom_point(data=df_incidence, mapping=aes(x=date, y=incidence_7_days_emp, color="Empirical"))
+  + geom_line(data=df_incidence_agg, mapping=aes(x=date, y=incidence_7_days_sim, color="Simulation"))
+  + geom_point(data=df_incidence_agg, mapping=aes(x=date, y=incidence_7_days_sim, color="Simulation"))
+  + geom_ribbon(data=df_incidence_agg, mapping=aes(x=date, ymin=ci_low_incidence_7_days_sim, ymax=ci_high_incidence_7_days_sim), alpha=0.1)
+  + xlab("Date")
+  + ylim(0,NA)
+  + ylab("Average weekly 7-day incidence rate per 100,000")
+  + theme_bw()
+  + ggtitle("7-day incidence over time")
+  + theme(plot.margin = unit(c(1,1,1,1), 'lines'))
+  + theme(axis.text = element_text(size = 8), axis.title = element_text(size = 9))
+  + theme(aspect.ratio=1)
+  + theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
+  + scale_color_manual(name='Data source:',
+                     breaks=c('Empirical', 'Simulation'),
+                     values=c('Empirical'='#F8766D', 'Simulation' ='#00BFC4'))
+)
+g_inc
+```
+
+```{r}
+df_age_cases <- read.csv(here("data_output/eval/df_eval_infections_cum_infections_rel.csv"))
+df_age_cases$age_group <- as.factor(df_age_cases$age_group)
+
+df_age_cases$sd_rel_freq <- ave(
+  df_age_cases$rel_freq,
+  df_age_cases$age_group,
+  df_age_cases$source,
+  FUN=sd
+)
+df_age_cases$se_rel_freq <- df_age_cases$sd_rel_freq / sqrt((nrow(df_age_cases) / 6) - 2)
+df_age_cases$ci_rel_freq <- df_age_cases$se_rel_freq * 1.96
+
+
+df_age_cases_agg <- aggregate(
+  x=list("rel_freq"=df_age_cases$rel_freq, "ci_rel_freq"=df_age_cases$ci_rel_freq),
+  by=list("source"=df_age_cases$source, "age_group"=df_age_cases$age_group),
+  FUN=mean
+)
+
+df_age_cases_agg$ci_low_rel_freq <- df_age_cases_agg$rel_freq - df_age_cases_agg$ci_rel_freq
+df_age_cases_agg$ci_high_rel_freq <- df_age_cases_agg$rel_freq + df_age_cases_agg$ci_rel_freq
+
+g_age_cases <- (
+  ggplot(data=df_age_cases_agg, mapping=aes(x=age_group, y=rel_freq, fill=source))
+  + geom_bar(stat="identity", position = position_dodge())
+  + theme_bw()
+  + geom_errorbar(aes(ymin=ci_low_rel_freq, ymax=ci_high_rel_freq), width=.2, position=position_dodge(.9))
+  + xlab("Age group (lower bound)")
+  + ylab("Relative frequency within population")
+  + ggtitle("Infections by age group")
+  + theme(axis.text = element_text(size = 8), axis.title = element_text(size = 9))
+  + theme(plot.margin = unit(c(1,1,1,1), 'lines'))
+  + theme(aspect.ratio=1)
+  + ylim(0,0.5)
+  + theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
+  + scale_color_manual(name='Data source:',
+                     breaks=c('Empirical', 'Simulation'),
+                     values=c('Empirical'='#00BFC4', 'Simulation'='#F8766D'))
+)
+  
+g_age_cases
+
+```
+
+```{r}
+df_age_cases <- read.csv(here("data_output/eval/df_eval_infections_cum_infections_age_rel.csv"))
+df_age_cases$age_group <- as.factor(df_age_cases$age_group)
+
+df_age_cases$sd_rel_freq <- ave(
+  df_age_cases$rel_freq,
+  df_age_cases$age_group,
+  df_age_cases$source,
+  FUN=sd
+)
+df_age_cases$se_rel_freq <- df_age_cases$sd_rel_freq / sqrt((nrow(df_age_cases) / 6) - 2)
+df_age_cases$ci_rel_freq <- df_age_cases$se_rel_freq * 1.96
+
+
+df_age_cases_agg <- aggregate(
+  x=list("rel_freq"=df_age_cases$rel_freq, "ci_rel_freq"=df_age_cases$ci_rel_freq),
+  by=list("source"=df_age_cases$source, "age_group"=df_age_cases$age_group),
+  FUN=mean
+)
+
+df_age_cases_agg$ci_low_rel_freq <- df_age_cases_agg$rel_freq - df_age_cases_agg$ci_rel_freq
+df_age_cases_agg$ci_high_rel_freq <- df_age_cases_agg$rel_freq + df_age_cases_agg$ci_rel_freq
+
+g_age_cases_inc <- (
+  ggplot(data=df_age_cases_agg, mapping=aes(x=age_group, y=rel_freq, fill=source))
+  + geom_bar(stat="identity", position = position_dodge())
+  + theme_bw()
+  + geom_errorbar(aes(ymin=ci_low_rel_freq, ymax=ci_high_rel_freq), width=.2, position=position_dodge(.9))
+  + xlab("Age group (lower bound)")
+  + ylab("Relative frequency within age group")
+  + ggtitle("Incidence within age group")
+  + theme(axis.text = element_text(size = 8), axis.title = element_text(size = 9))
+  + theme(plot.margin = unit(c(1,1,1,1), 'lines'))
+  + theme(aspect.ratio=1)
+  + ylim(0,0.1)
+  + theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
+  + scale_color_manual(name='Data source:',
+                     breaks=c('Empirical', 'Simulation'),
+                     values=c('Empirical'='#00BFC4', 'Simulation'='#F8766D'))
+)
+  
+g_age_cases_inc
+```
+
+```{r}
+ggarrange(
+  g_inc, 
+  g_age_cases,
+  g_age_cases_inc,
+  common.legend=TRUE, 
+  legend="bottom",
+  labels = c("A", "B", "C"),
+  nrow=1
+  )
+ggsave(here("img/fig_eval_incidence.pdf"), width = 15, height = 5, dpi = 300)
+ggsave(here("img/fig_eval_incidence.png"), width = 15, height = 5, dpi = 300)
+```
+
+
+## Eval contacts
+
+```{r}
+df_flat <- read.csv(here("data_output/eval/df_eval_contacts_m_flat.csv"))
+df_flat <- df_flat[!duplicated(df_flat[,c("simulation", "polymod")]),]
+```
+
+```{r}
+df_m_sim <- read.csv(here("data_output/eval/df_eval_contacts_m_sim.csv"))
+names(df_m_sim)[names(df_m_sim) == "X"] <- "i"
+df_m_sim <- tidyr::pivot_longer(
+  df_m_sim, 
+  cols=tidyr::starts_with("X"), 
+  names_to = "j", 
+  values_to = "Contacts"
+  )
+df_m_sim$j <- gsub("X", "", df_m_sim$j)
+df_m_sim$j <- as.numeric(df_m_sim$j)
+df_m_sim$i <- df_m_sim$i * 5
+df_m_sim$j <- df_m_sim$j * 5
+```
+
+```{r}
+df_m_emp <- read.csv(here("data_output/eval/df_eval_contacts_m_emp.csv"))
+names(df_m_emp)[names(df_m_emp) == "X"] <- "i"
+df_m_emp <- tidyr::pivot_longer(df_m_emp, cols=tidyr::starts_with("X"), names_to = "j", values_to = "Contacts")
+df_m_emp$j <- gsub("X", "", df_m_emp$j)
+df_m_emp$j <- as.numeric(df_m_emp$j)
+df_m_emp$i <- df_m_emp$i * 5
+df_m_emp$j <- df_m_emp$j * 5
+```
+
+```{r}
+# chi-square test
+matrix_emp <- read.csv(here("data_output/eval/df_eval_contacts_m_emp.csv"))[,2:17]
+matrix_sim <- read.csv(here("data_output/eval/df_eval_contacts_m_sim.csv"))[,2:17]
+
+chi_square <- sum((matrix_sim - matrix_emp)^2 / matrix_emp)
+
+degrees_of_freedom <- (nrow(matrix_sim) - 1) * (ncol(matrix_sim) - 1)
+
+p <- pchisq(chi_square, 225, lower.tail = F)
+
+print(p)
+```
+
+
+```{r}
+g_m_sim <- (
+  ggplot(data=df_m_sim, mapping=aes(x=i, y=j, fill=Contacts))
+  + geom_tile()
+  + scale_fill_viridis(option="inferno", discrete=FALSE, limits=c(0,4.5), )
+  + theme_bw()
+  + theme(plot.title = element_text(hjust = 0.5))
+  + xlab("Age group i")
+  + ylab("Age group j")
+  + ggtitle("Simulated age contact matrix")
+  + xlim(-5,75)
+  + ylim(-5,75)
+  + theme(plot.margin = unit(c(1,1,1,1), 'lines'))
+  + theme(axis.text = element_text(size = 8), axis.title = element_text(size = 9))
+)
+g_m_sim
+```
+
+```{r}
+g_m_emp <- (
+  ggplot(data=df_m_emp, mapping=aes(x=i, y=j, fill=Contacts))
+  + geom_tile()
+  + scale_fill_viridis(option="inferno", discrete=FALSE, limits=c(0,4.5))
+  + theme_bw()
+  + theme(plot.title = element_text(hjust = 0.5))
+  + theme(axis.text = element_text(size = 8), axis.title = element_text(size = 9))
+  + xlab("Age group i")
+  + ylab("Age group j")
+  + ggtitle("Empirical age contact matrix")
+  + theme(plot.margin = unit(c(1,1,1,1), 'lines'))
+  + xlim(-5,75)
+  + ylim(-5,75)
+)
+g_m_emp
+```
+
+```{r}
+g_m_corr <- (
+  ggplot(data=df_flat, mapping=aes(y=simulation, x=polymod))
+  + geom_point(size=0.5)
+  + theme_bw()
+  + geom_abline(intercept=0, slope=1, linetype="dashed")
+  + geom_smooth(method=lm, size=0.5, alpha=0.1, se=F)
+  + theme(aspect.ratio=1)
+  + theme(plot.title = element_text(hjust = 0.5))
+  + ylab("Simulated number of contacts")
+  + xlab("Empirical number of contacts")
+  + ggtitle("Relation between contact frequencies")
+  + theme(plot.margin = unit(c(1,1,1,1), 'lines'))
+  + theme(axis.text = element_text(size = 8), axis.title = element_text(size = 9))
+  + xlim(0,5)
+  + ylim(0,5)
+  
+)
+g_m_corr
+```
+
+```{r}
+cor.test(df_flat$simulation, df_flat$polymod)
+```
+
+```{r}
+ggarrange(
+  g_m_emp,
+  g_m_sim,
+  g_m_corr,
+  labels = c("A", "B", "C"),
+  ncol = 3
+  )
+ggsave(here("img/fig_eval_contacts.pdf"), width = 17, height = 5, dpi = 300)
+ggsave(here("img/fig_eval_contacts.png"), width = 17, height = 5, dpi = 300)
+```
+
+
+
+## Eval replications of base model
+
+```{r}
+
+df <- vroom::vroom(here("data_output/eval/df_eval_agents.csv"))
+
+df$ever_infected <- ifelse(df$ever_infected==TRUE, 1, 0)
+
+# counts per replication 
+df_agg <- aggregate(
+   x=list(
+     "ever_infected"=df$ever_infected
+     ),
+   by=list(
+     "replication"=df$replication
+     
+     ),
+   FUN=sum
+ )
+```
+
+```{r}
+df_mean <- get_replications(df_agg, mean, "ever_infected")
+(
+  ggplot(data=df_mean, mapping=aes(x=n, y=estimate))
+  + geom_point()
+  + geom_line()
+  + ylim(0, NaN)
+  + xlab("Number of replications")
+  + ylab("Average number of infected agents")
+  + ggtitle("Base model")
+  + theme(plot.title = element_text(hjust = 0.5))
+)
+ggsave(here("img/fig_eval_rep_base_model.pdf"), width = 7, height = 5, dpi = 300)
+ggsave(here("img/fig_eval_rep_base_model.png"), width = 7, height = 5, dpi = 300)
+```
