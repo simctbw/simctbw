@@ -24,7 +24,15 @@ here()
 ```
 
 ```{r}
-# load data
+# Set this to `FALSE`, if you want to load the agent-level data (not provided here).
+LOAD_AGGR_DATA = TRUE
+```
+
+
+```{r}
+# Important:
+# If you want to load the provided aggregated data, just uncomment the corresponding definition of `sens_param_name`.
+# If you want to load the agent-level data (not provided here), also uncomment the line where the corresponding `df`is defined.
 
 # selection fracs
 #df <- arrow::open_dataset(here::here("data_output/run_senslocal_contact_fracs"))
@@ -68,116 +76,121 @@ names(df)
 ## Aggregate on model level
 
 ```{r}
-df_model_list <- c()
-n_models = 5600
-steps = 20
-step_size <- n_models / steps
-
-# process the data in smaller chunks
-for (i in 1:steps) {
-  i <- i - 1
-  lb <- i * step_size
-  ub <- i * step_size + step_size
-  print(c(i, lb, ub))
-    
-  df_model_list[[i+1]] <- df |>
+if (!LOAD_AGGR_DATA){
+  df_model_list <- c()
+  n_models = 5600
+  steps = 20
+  step_size <- n_models / steps
+  
+  # process the data in smaller chunks
+  for (i in 1:steps) {
+    i <- i - 1
+    lb <- i * step_size
+    ub <- i * step_size + step_size
+    print(c(i, lb, ub))
       
-      # filter by model index to process only a subset of models
-      filter(model_index >= lb & model_index < ub) |>
+    df_model_list[[i+1]] <- df |>
+        
+        # filter by model index to process only a subset of models
+        filter(model_index >= lb & model_index < ub) |>
+        
+        # transform some variables
+        mutate(
+         Prioritization = contact_tracing_population_sort_mode,
+         ever_infected = ifelse(ever_infected == T, 1, 0),
+         ever_icu = ifelse(!is.na(date_icu), 1, 0)
+       ) |>
       
-      # transform some variables
-      mutate(
-       Prioritization = contact_tracing_population_sort_mode,
-       ever_infected = ifelse(ever_infected == T, 1, 0),
-       ever_icu = ifelse(!is.na(date_icu), 1, 0)
-     ) |>
-    
-      # group by agent (one agent exists in every (50) replication of a model)
+        # group by agent (one agent exists in every (50) replication of a model)
+        group_by(
+         Prioritization,
+         contact_tracing_frac,
+         duration_infectious,
+         inf_p_shift,
+         contact_tracing_max_currently_traced,
+         ct_isolation_level,
+         n_days_contact_tracing_isolation,
+         contact_tracing_contact_selection_frac,
+         ct_start_date,
+         end_date,
+         model_index,
+         unique_agent_id
+       ) |>
+      
+       # average on agent level
+       summarize(
+         ever_infected = mean(ever_infected),
+         ever_icu = mean(ever_icu),
+         n_times_contact_tracing = mean(n_times_contact_tracing),
+         n_contacts_traced = mean(n_contacts_traced)
+       ) |>
+      
+      # group by model
       group_by(
-       Prioritization,
-       contact_tracing_frac,
-       duration_infectious,
-       inf_p_shift,
-       contact_tracing_max_currently_traced,
-       ct_isolation_level,
-       n_days_contact_tracing_isolation,
-       contact_tracing_contact_selection_frac,
-       ct_start_date,
-       end_date,
-       model_index,
-       unique_agent_id
-     ) |>
-    
-     # average on agent level
-     summarize(
-       ever_infected = mean(ever_infected),
-       ever_icu = mean(ever_icu),
-       n_times_contact_tracing = mean(n_times_contact_tracing),
-       n_contacts_traced = mean(n_contacts_traced)
-     ) |>
-    
-    # group by model
-    group_by(
-       Prioritization,
-       contact_tracing_frac,
-       duration_infectious,
-       inf_p_shift,
-       contact_tracing_max_currently_traced,
-       n_days_contact_tracing_isolation,
-       contact_tracing_contact_selection_frac,
-       ct_isolation_level,
-       ct_start_date,
-       end_date,
-       model_index,
-     ) |>
-    
-     # count infections etc. per model
-     summarize(
-       n_infected = sum(ever_infected),
-       n_icu = sum(ever_icu),
-       n_times_contact_tracing = sum(n_times_contact_tracing),
-       n_contacts_traced = sum(n_contacts_traced)
-     ) |>
-     collect()
+         Prioritization,
+         contact_tracing_frac,
+         duration_infectious,
+         inf_p_shift,
+         contact_tracing_max_currently_traced,
+         n_days_contact_tracing_isolation,
+         contact_tracing_contact_selection_frac,
+         ct_isolation_level,
+         ct_start_date,
+         end_date,
+         model_index,
+       ) |>
+      
+       # count infections etc. per model
+       summarize(
+         n_infected = sum(ever_infected),
+         n_icu = sum(ever_icu),
+         n_times_contact_tracing = sum(n_times_contact_tracing),
+         n_contacts_traced = sum(n_contacts_traced)
+       ) |>
+       collect()
+  }
+  
+  df <- do.call(rbind, df_model_list)
+
+  
+  df$Prioritization <- factor(
+        x=df$Prioritization,
+        levels=c(
+          "random",
+          "super-spreaders",
+          "household_size",
+          "age",
+          "inc_rank_sim",
+          "inc_rank_emp",
+          "young",
+          "old"
+          ),
+        labels=c(
+          "1. Random", 
+          "2. HH+Age", 
+          "3. HH", 
+          "4. Age",  
+          "5. Inc. sim.", 
+          "6. Inc. emp.",  
+          "7. Young", 
+          "8 .Old")
+      )
+  
+  df <- df[!is.na(df$Prioritization),]
 }
-
-df <- do.call(rbind, df_model_list)
 ```
 
 ```{r}
-df$Prioritization <- factor(
-      x=df$Prioritization,
-      levels=c(
-        "random",
-        "super-spreaders",
-        "household_size",
-        "age",
-        "inc_rank_sim",
-        "inc_rank_emp",
-        "young",
-        "old"
-        ),
-      labels=c(
-        "1. Random", 
-        "2. HH+Age", 
-        "3. HH", 
-        "4. Age",  
-        "5. Inc. sim.", 
-        "6. Inc. emp.",  
-        "7. Young", 
-        "8 .Old")
-    )
-
-df <- df[!is.na(df$Prioritization),]
+if (!LOAD_AGGR_DATA){
+  df_ori <- df
+  save(df_ori, file=paste(here("data_output/sens/"), "df_sens_aggr_", sens_param_name, ".R", sep=""))
+}
 ```
 
 ```{r}
-df_ori <- df
-save(df_ori, file=paste(here("data_output/sens/"), "df_sens_aggr_", sens_param_name, ".R", sep=""))
-```
-
-```{r}
-df <- load(paste(here("data_output/sens/"), "df_sens_aggr_", sens_param_name, ".R", sep=""))
+if (LOAD_AGGR_DATA){
+  df <- load(paste(here("data_output/sens/"), "df_sens_aggr_", sens_param_name, ".R", sep=""))
+}
 ```
 
 
